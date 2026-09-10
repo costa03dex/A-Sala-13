@@ -3,1122 +3,2562 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>O Mistério da Turma</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body {
-    background: #080b14;
-    color: white;
-    font-family: Arial, sans-serif;
-    overflow-x: hidden;
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#050505;
+    color:#fff;
 }
 
-button {
-    font-family: inherit;
-    cursor: pointer;
+/* =========================
+   VARIÁVEIS
+========================= */
+
+:root{
+    --black:#050505;
+    --dark:#101010;
+    --dark2:#181818;
+    --gray:#333;
+    --gray2:#666;
+    --gray3:#999;
+    --light:#ddd;
+    --white:#fff;
 }
 
 /* =========================
    TELAS
 ========================= */
 
-.screen {
-    display: none;
-    min-height: 100vh;
+.screen{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:none;
+    background:#050505;
 }
 
-.screen.active {
-    display: flex;
+.screen.active{
+    display:flex;
+}
+
+/* =========================
+   INTRO
+========================= */
+
+#introScreen{
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    overflow:hidden;
+}
+
+.intro-bg{
+    position:absolute;
+    inset:0;
+
+    background-image:
+        linear-gradient(
+            rgba(0,0,0,.72),
+            rgba(0,0,0,.88)
+        ),
+        url("cenarios/sala-aula.png");
+
+    background-size:cover;
+    background-position:center;
+
+    filter:grayscale(100%);
+    transform:scale(1.05);
+
+    animation:introZoom 18s infinite alternate;
+}
+
+@keyframes introZoom{
+    from{
+        transform:scale(1.02);
+    }
+
+    to{
+        transform:scale(1.10);
+    }
+}
+
+.intro-content{
+    position:relative;
+    z-index:2;
+    width:min(900px,90%);
+}
+
+.intro-small{
+    font-size:13px;
+    letter-spacing:5px;
+    color:#aaa;
+    margin-bottom:25px;
+    text-transform:uppercase;
+}
+
+.intro-text{
+    min-height:150px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:clamp(22px,4vw,40px);
+    font-weight:bold;
+    line-height:1.3;
+
+    text-shadow:
+        0 3px 10px #000,
+        0 0 20px #000;
+}
+
+.intro-text.fade{
+    animation:textFade .7s ease;
+}
+
+@keyframes textFade{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.intro-controls{
+    margin-top:45px;
+}
+
+.btn{
+    border:1px solid #777;
+    background:#111;
+    color:#fff;
+
+    padding:14px 30px;
+
+    font-size:14px;
+    font-weight:bold;
+    letter-spacing:2px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.btn:hover{
+    background:#fff;
+    color:#000;
+    border-color:#fff;
+    transform:translateY(-2px);
+}
+
+.skip{
+    display:block;
+    margin:20px auto 0;
+
+    background:none;
+    border:0;
+
+    color:#777;
+    cursor:pointer;
+
+    font-size:12px;
+    letter-spacing:1px;
+}
+
+.skip:hover{
+    color:#fff;
 }
 
 /* =========================
    MENU
 ========================= */
 
-#menu {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+#menuScreen{
+    align-items:center;
+    justify-content:center;
 
     background:
-        linear-gradient(rgba(5,8,18,.65), rgba(5,8,18,.9)),
-        url("cenarios/sala-13.png") center/cover;
+        radial-gradient(
+            circle at center,
+            #242424 0%,
+            #0d0d0d 45%,
+            #000 100%
+        );
 }
 
-.menu-box {
-    width: min(90%, 650px);
-    padding: 45px;
-    background: rgba(8, 12, 25, .88);
-    border: 2px solid #4d8cff;
-    border-radius: 20px;
-    box-shadow: 0 0 50px rgba(40,100,255,.25);
+.menu{
+    text-align:center;
+    width:min(800px,90%);
 }
 
-.menu-title {
-    font-size: clamp(35px, 7vw, 70px);
-    color: #70a7ff;
-    text-shadow: 0 0 20px #2167ff;
-    margin-bottom: 10px;
+.logo{
+    font-size:clamp(40px,7vw,80px);
+    font-weight:900;
+    letter-spacing:4px;
+
+    text-shadow:
+        0 4px 0 #333,
+        0 8px 20px #000;
 }
 
-.menu-subtitle {
-    color: #c5d5ff;
-    margin-bottom: 35px;
+.subtitle{
+    margin-top:15px;
+    color:#999;
+    letter-spacing:5px;
+    font-size:13px;
 }
 
-.menu-button {
-    width: 100%;
-    padding: 17px;
-    margin-top: 12px;
-    border: none;
-    border-radius: 12px;
-    background: #2563eb;
-    color: white;
-    font-size: 19px;
-    font-weight: bold;
-    transition: .2s;
+.menu-buttons{
+    margin-top:55px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
 }
 
-.menu-button:hover {
-    transform: scale(1.03);
-    background: #3b82f6;
+.menu-btn{
+    width:min(320px,100%);
 }
 
 /* =========================
-   ESCOLHA
+   SELEÇÃO
 ========================= */
 
-#characters {
-    flex-direction: column;
-    padding: 35px;
-    background: radial-gradient(circle at top, #16254a, #070a12 65%);
+#characterScreen{
+    flex-direction:column;
+    overflow:auto;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #242424,
+            #090909 65%
+        );
 }
 
-.selection-title {
-    text-align: center;
-    font-size: 38px;
-    margin-bottom: 8px;
+.character-header{
+    text-align:center;
+    padding:35px 20px 15px;
 }
 
-.selection-subtitle {
-    text-align: center;
-    color: #aebbd5;
-    margin-bottom: 30px;
+.character-header h1{
+    font-size:clamp(26px,5vw,45px);
+    letter-spacing:3px;
 }
 
-.character-grid {
-    width: min(1100px, 100%);
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: 18px;
+.character-header p{
+    color:#999;
+    margin-top:8px;
 }
 
-.character-card {
-    position: relative;
-    min-height: 250px;
-    background: #10182b;
-    border: 2px solid #253657;
-    border-radius: 15px;
-    overflow: hidden;
-    transition: .2s;
+.characters{
+    width:min(1150px,94%);
+    margin:20px auto 50px;
+
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(180px,1fr));
+
+    gap:18px;
 }
 
-.character-card:hover {
-    transform: translateY(-5px);
-    border-color: #4d8cff;
+.character-card{
+    background:#111;
+    border:1px solid #333;
+
+    padding:18px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    position:relative;
+    overflow:hidden;
 }
 
-.character-card.selected {
-    border-color: #60a5fa;
-    box-shadow: 0 0 25px rgba(59,130,246,.45);
+.character-card:hover{
+    border-color:#aaa;
+    transform:translateY(-5px);
+    background:#191919;
 }
 
-.character-image {
-    width: 100%;
-    height: 190px;
-    object-fit: contain;
-    image-rendering: pixelated;
+.character-card.selected{
+    border-color:#fff;
+    box-shadow:0 0 0 2px #fff inset;
 }
 
-.character-name {
-    padding: 12px;
-    font-weight: bold;
-    font-size: 18px;
+.character-img{
+    width:100%;
+    height:190px;
+
+    object-fit:contain;
+
+    filter:
+        grayscale(100%)
+        contrast(1.05);
+
+    image-rendering:auto;
+
+    background:
+        linear-gradient(
+            #1b1b1b,
+            #080808
+        );
 }
 
-.select-character {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
+.character-name{
+    margin-top:12px;
+
+    font-size:18px;
+    font-weight:bold;
+}
+
+.character-desc{
+    margin-top:7px;
+
+    color:#999;
+    font-size:12px;
+    line-height:1.4;
+}
+
+.ability{
+    margin-top:12px;
+
+    padding:7px;
+
+    background:#202020;
+
+    color:#ccc;
+
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
 }
 
 /* =========================
    JOGO
 ========================= */
 
-#game {
-    flex-direction: column;
-    min-height: 100vh;
-    background: #05070d;
+#gameScreen{
+    background:#000;
 }
 
-.game-scene {
-    position: relative;
-    flex: 1;
-    min-height: 65vh;
-    overflow: hidden;
-    background: #111;
+.game{
+    width:100%;
+    height:100%;
+
+    position:relative;
 }
 
-#background {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    image-rendering: pixelated;
+.scene{
+    position:absolute;
+    inset:0;
+
+    background-size:cover;
+    background-position:center;
+
+    filter:
+        grayscale(100%)
+        contrast(1.05);
+
+    transition:
+        background-image .4s ease,
+        opacity .4s ease;
 }
 
-.scene-dark {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(0,0,0,.05),
-        rgba(0,0,0,.15) 50%,
-        rgba(0,0,0,.65)
-    );
+.scene::after{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.2),
+            transparent 40%,
+            rgba(0,0,0,.65)
+        );
 }
 
-/* personagem */
+/* =========================
+   HUD
+========================= */
 
-#player-character {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 85%;
-    max-width: 70%;
-    object-fit: contain;
-    object-position: bottom;
-    image-rendering: pixelated;
-    filter: drop-shadow(0 10px 15px rgba(0,0,0,.6));
+.hud{
+    position:absolute;
+
+    top:18px;
+    left:18px;
+    right:18px;
+
+    z-index:10;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    pointer-events:none;
 }
 
-/* HUD */
+.hud-box{
+    background:rgba(0,0,0,.72);
 
-.hud {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    display: flex;
-    justify-content: space-between;
-    z-index: 5;
+    border:1px solid #555;
+
+    padding:10px 15px;
+
+    backdrop-filter:blur(5px);
+
+    font-size:12px;
+    letter-spacing:1px;
 }
 
-.hud-box {
-    background: rgba(5,8,15,.85);
-    border: 1px solid #40577f;
-    padding: 10px 15px;
-    border-radius: 10px;
-    font-size: 14px;
+.hud-right{
+    display:flex;
+    gap:8px;
+}
+
+/* =========================
+   PERSONAGEM
+========================= */
+
+.player-character{
+    position:absolute;
+
+    z-index:4;
+
+    bottom:145px;
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    height:min(65vh,560px);
+    max-width:65vw;
+
+    object-fit:contain;
+
+    filter:
+        grayscale(100%)
+        contrast(1.08)
+        drop-shadow(0 10px 15px #000);
+
+    pointer-events:none;
+
+    transition:.3s;
+}
+
+.player-character.talk{
+    animation:characterTalk .25s ease;
+}
+
+@keyframes characterTalk{
+    0%{
+        transform:translateX(-50%) scale(1);
+    }
+
+    50%{
+        transform:translateX(-50%) scale(1.015);
+    }
+
+    100%{
+        transform:translateX(-50%) scale(1);
+    }
 }
 
 /* =========================
    DIÁLOGO
 ========================= */
 
-.dialogue {
-    position: relative;
-    background: rgba(5,8,17,.97);
-    border-top: 2px solid #3b82f6;
-    padding: 18px 25px 22px;
-    min-height: 190px;
-    z-index: 10;
+.dialogue{
+    position:absolute;
+
+    z-index:20;
+
+    left:4%;
+    right:4%;
+    bottom:20px;
+
+    min-height:125px;
+
+    background:
+        linear-gradient(
+            rgba(15,15,15,.97),
+            rgba(5,5,5,.97)
+        );
+
+    border:1px solid #777;
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.8);
+
+    padding:20px 25px;
+
+    cursor:pointer;
 }
 
-.speaker {
-    color: #60a5fa;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 8px;
+.speaker{
+    color:#fff;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+    letter-spacing:2px;
+
+    margin-bottom:10px;
+
+    text-transform:uppercase;
 }
 
-.dialogue-text {
-    color: #edf4ff;
-    font-size: 18px;
-    line-height: 1.6;
-    min-height: 65px;
+.dialogue-text{
+    color:#ddd;
+
+    font-size:17px;
+
+    line-height:1.5;
+
+    min-height:50px;
 }
 
-.next-button {
-    position: absolute;
-    right: 22px;
-    bottom: 18px;
-    background: #2563eb;
-    border: none;
-    color: white;
-    padding: 11px 20px;
-    border-radius: 9px;
-    font-weight: bold;
+.continue{
+    position:absolute;
+
+    right:20px;
+    bottom:12px;
+
+    color:#777;
+
+    font-size:11px;
+
+    letter-spacing:2px;
 }
 
-.next-button:hover {
-    background: #3b82f6;
+.dialogue:hover .continue{
+    color:#fff;
 }
 
 /* =========================
    ESCOLHAS
 ========================= */
 
-.choices {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
+.choices{
+    position:absolute;
+
+    z-index:30;
+
+    inset:0;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(0,0,0,.75);
+
+    padding:25px;
 }
 
-.choice-button {
-    flex: 1;
-    min-width: 180px;
-    padding: 14px;
-    background: #17233b;
-    border: 1px solid #3d5c8c;
-    color: white;
-    border-radius: 10px;
-    font-size: 15px;
+.choices.active{
+    display:flex;
 }
 
-.choice-button:hover {
-    background: #23416f;
+.choice-box{
+    width:min(600px,100%);
+
+    background:#111;
+
+    border:1px solid #666;
+
+    padding:25px;
+
+    box-shadow:0 15px 50px #000;
+}
+
+.choice-title{
+    text-align:center;
+
+    font-size:20px;
+    font-weight:bold;
+
+    letter-spacing:2px;
+
+    margin-bottom:20px;
+}
+
+.choice-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.choice-btn{
+    padding:14px;
+
+    background:#1c1c1c;
+
+    color:#ddd;
+
+    border:1px solid #444;
+
+    cursor:pointer;
+
+    text-align:left;
+
+    transition:.2s;
+}
+
+.choice-btn:hover{
+    background:#fff;
+    color:#000;
+    border-color:#fff;
 }
 
 /* =========================
-   PISTAS
+   INVESTIGAÇÃO
 ========================= */
 
-.clue {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 100;
-    width: min(90%, 500px);
-    padding: 30px;
-    text-align: center;
-    background: #0c1425;
-    border: 2px solid #60a5fa;
-    border-radius: 18px;
-    box-shadow: 0 0 50px rgba(0,0,0,.8);
+.investigation{
+    position:absolute;
+
+    z-index:25;
+
+    inset:0;
+
+    display:none;
+
+    background:
+        rgba(0,0,0,.9);
+
+    overflow:auto;
+
+    padding:80px 25px 30px;
 }
 
-.clue h2 {
-    color: #60a5fa;
-    margin-bottom: 15px;
+.investigation.active{
+    display:block;
 }
 
-.clue button {
-    margin-top: 20px;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 8px;
-    background: #2563eb;
-    color: white;
+.investigation-title{
+    text-align:center;
+
+    font-size:30px;
+
+    letter-spacing:3px;
+}
+
+.investigation-sub{
+    text-align:center;
+
+    color:#888;
+
+    margin-top:8px;
+    margin-bottom:30px;
+}
+
+.locations{
+    width:min(1000px,100%);
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(200px,1fr));
+
+    gap:15px;
+}
+
+.location{
+    min-height:130px;
+
+    background:#141414;
+
+    border:1px solid #333;
+
+    padding:20px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.location:hover{
+    background:#222;
+    border-color:#888;
+    transform:translateY(-3px);
+}
+
+.location h3{
+    margin-bottom:10px;
+}
+
+.location p{
+    color:#888;
+    font-size:12px;
+}
+
+.location.found{
+    border-color:#fff;
+}
+
+.location.found::after{
+    content:"✓ PISTA ENCONTRADA";
+
+    display:block;
+
+    margin-top:12px;
+
+    font-size:10px;
+
+    color:#aaa;
+
+    letter-spacing:1px;
+}
+
+/* =========================
+   PISTA
+========================= */
+
+.clue-modal{
+    position:absolute;
+
+    z-index:50;
+
+    inset:0;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(0,0,0,.85);
+
+    padding:20px;
+}
+
+.clue-modal.active{
+    display:flex;
+}
+
+.clue{
+    width:min(600px,100%);
+
+    background:#111;
+
+    border:1px solid #777;
+
+    padding:30px;
+
+    box-shadow:0 20px 60px #000;
+
+    text-align:center;
+}
+
+.clue-icon{
+    font-size:35px;
+
+    margin-bottom:15px;
+}
+
+.clue h2{
+    margin-bottom:15px;
+}
+
+.clue p{
+    color:#bbb;
+    line-height:1.6;
+}
+
+.clue button{
+    margin-top:25px;
+}
+
+/* =========================
+   FINAIS
+========================= */
+
+.ending{
+    position:absolute;
+
+    z-index:100;
+
+    inset:0;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    background:
+        linear-gradient(
+            rgba(0,0,0,.75),
+            rgba(0,0,0,.95)
+        );
+
+    padding:30px;
+}
+
+.ending.active{
+    display:flex;
+}
+
+.ending-content{
+    width:min(800px,100%);
+}
+
+.ending-label{
+    color:#888;
+
+    font-size:12px;
+
+    letter-spacing:5px;
+
+    margin-bottom:15px;
+}
+
+.ending h1{
+    font-size:clamp(30px,6vw,65px);
+
+    letter-spacing:4px;
+
+    margin-bottom:20px;
+}
+
+.ending p{
+    color:#bbb;
+
+    font-size:17px;
+
+    line-height:1.7;
+
+    margin-bottom:30px;
+}
+
+/* =========================
+   NOTIFICAÇÃO
+========================= */
+
+.notification{
+    position:absolute;
+
+    z-index:80;
+
+    top:80px;
+    left:50%;
+
+    transform:translateX(-50%) translateY(-20px);
+
+    background:#111;
+
+    border:1px solid #777;
+
+    padding:12px 20px;
+
+    color:#ddd;
+
+    font-size:12px;
+
+    letter-spacing:1px;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.3s;
+}
+
+.notification.show{
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
 }
 
 /* =========================
    RESPONSIVO
 ========================= */
 
-@media(max-width: 700px) {
+@media(max-width:700px){
 
-    #characters {
-        padding: 20px 12px;
+    .characters{
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
-    .character-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+    .character-img{
+        height:150px;
     }
 
-    .character-card {
-        min-height: 210px;
+    .player-character{
+        height:48vh;
+        bottom:170px;
     }
 
-    .character-image {
-        height: 150px;
+    .dialogue{
+        left:10px;
+        right:10px;
+        bottom:10px;
+
+        min-height:145px;
+
+        padding:15px;
     }
 
-    #player-character {
-        height: 70%;
-        max-width: 90%;
+    .dialogue-text{
+        font-size:14px;
     }
 
-    .dialogue {
-        min-height: 220px;
-        padding: 15px;
+    .hud{
+        top:8px;
+        left:8px;
+        right:8px;
     }
 
-    .dialogue-text {
-        font-size: 16px;
+    .hud-box{
+        padding:7px;
+        font-size:9px;
     }
 
-    .next-button {
-        position: static;
-        margin-top: 12px;
-        width: 100%;
-    }
 }
+
+@media(max-width:430px){
+
+    .characters{
+        grid-template-columns:1fr;
+    }
+
+    .intro-text{
+        font-size:23px;
+    }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     MENU
-========================= -->
 
-<section id="menu" class="screen active">
+<!-- =====================================================
+     INTRODUÇÃO
+===================================================== -->
 
-    <div class="menu-box">
+<section id="introScreen" class="screen active">
 
-        <h1 class="menu-title">
-            O MISTÉRIO<br>DA TURMA
-        </h1>
+    <div class="intro-bg"></div>
 
-        <p class="menu-subtitle">
-            Uma aventura criada pela turma, para a turma.
-        </p>
+    <div class="intro-content">
 
-        <button class="menu-button" onclick="openCharacters()">
-            🎮 JOGAR
-        </button>
+        <div class="intro-small">
+            UMA SEXTA-FEIRA NORMAL
+        </div>
 
-        <button class="menu-button" onclick="continueGame()">
-            💾 CONTINUAR
-        </button>
+        <div id="introText" class="intro-text">
+            Tudo começou em uma sexta-feira aparentemente normal...
+        </div>
 
-        <button class="menu-button" onclick="showCredits()">
-            ℹ️ EXTRAS
-        </button>
+        <div class="intro-controls">
+
+            <button id="introButton" class="btn">
+                CONTINUAR
+            </button>
+
+            <button id="skipIntro" class="skip">
+                PULAR INTRO
+            </button>
+
+        </div>
 
     </div>
 
 </section>
 
 
-<!-- =========================
-     PERSONAGENS
-========================= -->
+<!-- =====================================================
+     MENU
+===================================================== -->
 
-<section id="characters" class="screen">
+<section id="menuScreen" class="screen">
 
-    <h1 class="selection-title">
-        QUEM É VOCÊ?
-    </h1>
+    <div class="menu">
 
-    <p class="selection-subtitle">
-        Escolha o personagem que você quer controlar.
-    </p>
+        <div class="logo">
+            O MISTÉRIO<br>
+            DA TURMA
+        </div>
 
-    <div id="characterGrid" class="character-grid"></div>
+        <div class="subtitle">
+            UMA HISTÓRIA QUE NÃO DEVERIA EXISTIR
+        </div>
+
+        <div class="menu-buttons">
+
+            <button
+                id="startGame"
+                class="btn menu-btn">
+                COMEÇAR
+            </button>
+
+            <button
+                id="continueGame"
+                class="btn menu-btn">
+                CONTINUAR
+            </button>
+
+        </div>
+
+    </div>
 
 </section>
 
 
-<!-- =========================
+<!-- =====================================================
+     SELEÇÃO DE PERSONAGEM
+===================================================== -->
+
+<section id="characterScreen" class="screen">
+
+    <div class="character-header">
+
+        <h1>ESCOLHA SEU PERSONAGEM</h1>
+
+        <p>
+            Cada aluno possui uma habilidade diferente.
+        </p>
+
+    </div>
+
+    <div id="characters" class="characters"></div>
+
+</section>
+
+
+<!-- =====================================================
      JOGO
-========================= -->
+===================================================== -->
 
-<section id="game" class="screen">
+<section id="gameScreen" class="screen">
 
-    <div class="game-scene">
+    <div class="game">
 
-        <img id="background" src="cenarios/sala-aula.png">
+        <div id="scene" class="scene"></div>
 
-        <div class="scene-dark"></div>
+
+        <!-- HUD -->
 
         <div class="hud">
 
             <div class="hud-box">
-                📖 Capítulo <span id="chapter">1</span>
+                PERSONAGEM:
+                <strong id="hudCharacter">
+                    —
+                </strong>
             </div>
 
-            <div class="hud-box">
-                🔎 Pistas: <span id="clueCount">0</span>
+            <div class="hud-right">
+
+                <div class="hud-box">
+                    PISTAS:
+                    <strong id="hudClues">
+                        0
+                    </strong>
+                </div>
+
+                <div class="hud-box">
+                    13:13
+                </div>
+
             </div>
 
         </div>
+
+
+        <!-- PERSONAGEM -->
 
         <img
-            id="player-character"
+            id="playerCharacter"
+            class="player-character"
             src=""
-            alt="Personagem"
+            alt=""
         >
 
-    </div>
 
-    <div class="dialogue">
+        <!-- NOTIFICAÇÃO -->
 
-        <div id="speaker" class="speaker">
-            -
+        <div
+            id="notification"
+            class="notification">
         </div>
 
-        <div id="dialogueText" class="dialogue-text">
-            -
+
+        <!-- DIÁLOGO -->
+
+        <div
+            id="dialogue"
+            class="dialogue">
+
+            <div
+                id="speaker"
+                class="speaker">
+                —
+            </div>
+
+            <div
+                id="dialogueText"
+                class="dialogue-text">
+            </div>
+
+            <div class="continue">
+                CLIQUE PARA CONTINUAR ▶
+            </div>
+
         </div>
 
-        <div id="choices" class="choices"></div>
 
-        <button id="nextButton" class="next-button" onclick="nextDialogue()">
-            CONTINUAR ▶
-        </button>
+        <!-- ESCOLHAS -->
+
+        <div
+            id="choices"
+            class="choices">
+
+            <div class="choice-box">
+
+                <div
+                    id="choiceTitle"
+                    class="choice-title">
+                    O que você faz?
+                </div>
+
+                <div
+                    id="choiceButtons"
+                    class="choice-buttons">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INVESTIGAÇÃO -->
+
+        <div
+            id="investigation"
+            class="investigation">
+
+            <h1 class="investigation-title">
+                INVESTIGAÇÃO
+            </h1>
+
+            <p class="investigation-sub">
+                A escola esconde alguma coisa.
+                Escolha um local para investigar.
+            </p>
+
+            <div
+                id="locations"
+                class="locations">
+            </div>
+
+            <div style="
+                text-align:center;
+                margin-top:30px;
+            ">
+
+                <button
+                    id="finishInvestigation"
+                    class="btn">
+                    CONTINUAR
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- MODAL DA PISTA -->
+
+        <div
+            id="clueModal"
+            class="clue-modal">
+
+            <div class="clue">
+
+                <div class="clue-icon">
+                    🔎
+                </div>
+
+                <h2>
+                    PISTA ENCONTRADA
+                </h2>
+
+                <p id="clueText"></p>
+
+                <button
+                    id="closeClue"
+                    class="btn">
+                    CONTINUAR
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- FINAL -->
+
+        <div
+            id="ending"
+            class="ending">
+
+            <div class="ending-content">
+
+                <div
+                    id="endingLabel"
+                    class="ending-label">
+                    FINAL
+                </div>
+
+                <h1 id="endingTitle">
+                    —
+                </h1>
+
+                <p id="endingText">
+                    —
+                </p>
+
+                <button
+                    id="restartGame"
+                    class="btn">
+                    JOGAR NOVAMENTE
+                </button>
+
+            </div>
+
+        </div>
 
     </div>
 
 </section>
 
 
-<!-- =========================
-     MODAL DE PISTA
-========================= -->
-
-<div id="clueModal" class="clue" style="display:none">
-
-    <h2>🔎 NOVA PISTA!</h2>
-
-    <p id="clueText"></p>
-
-    <button onclick="closeClue()">
-        CONTINUAR
-    </button>
-
-</div>
-
-
 <script>
 
-/* ==================================================
-   PERSONAGENS
-================================================== */
+/* =====================================================
+   DADOS DOS PERSONAGENS
+===================================================== */
 
 const characters = [
 
     {
-        id: "cibelly",
-        name: "Cibelly",
-        image: "personagens/cibelly.png"
+        id:"cibelly",
+        name:"Cibelly",
+        description:"Engraçada, descontraída e tranquila.",
+        ability:"Descontração",
+        image:"personagens/cibelly.png",
+        intro:"Tá... alguém pode me explicar por que a gente ainda está preso aqui?"
     },
 
     {
-        id: "fernanda",
-        name: "Fernanda",
-        image: "personagens/fernanda.png"
+        id:"fernanda",
+        name:"Fernanda",
+        description:"Mais quieta, educada, engraçada e fã de BTS.",
+        ability:"Observação Silenciosa",
+        image:"personagens/fernanda.png",
+        intro:"Tem alguma coisa estranha aqui... acho melhor observar antes de agir."
     },
 
     {
-        id: "rosana",
-        name: "Rosana",
-        image: "personagens/rosana.png"
+        id:"rosana",
+        name:"Rosana",
+        description:"Gótica, nerd e apaixonada por animes e K-pop.",
+        ability:"Investigação",
+        image:"personagens/rosana.png",
+        intro:"Se isso for algum tipo de mistério, eu quero descobrir o que está acontecendo."
     },
 
     {
-        id: "anna-laura",
-        name: "Anna Laura",
-        image: "personagens/anna-laura.png"
+        id:"anna-laura",
+        name:"Anna Laura",
+        description:"Educada, inteligente, nerd e fã de K-pop e animes.",
+        ability:"Lógica",
+        image:"personagens/anna-laura.png",
+        intro:"Se existe uma explicação para isso, provavelmente existe alguma pista."
     },
 
     {
-        id: "camylle",
-        name: "Camylle",
-        image: "personagens/camylle.png"
+        id:"camylle",
+        name:"Camylle",
+        description:"Educada, simpática e apaixonada por K-pop.",
+        ability:"Empatia",
+        image:"personagens/camylle.png",
+        intro:"Calma, gente. Primeiro vamos entender o que está acontecendo."
     },
 
     {
-        id: "avylla",
-        name: "Avylla",
-        image: "personagens/avylla.png"
+        id:"avylla",
+        name:"Avylla",
+        description:"Ama matemática, livros da roça e é muito engraçada.",
+        ability:"Matemática",
+        image:"personagens/avylla.png",
+        intro:"Se tiver número envolvido nisso, deixa comigo."
     },
 
     {
-        id: "costa",
-        name: "Costa",
-        image: "personagens/costa.png"
+        id:"costa",
+        name:"Costa",
+        description:"Educada, engraçada, cristã e apaixonada por música e violão.",
+        ability:"Música",
+        image:"personagens/costa.png",
+        intro:"Alguma coisa nessa escola está diferente... precisamos descobrir o quê."
     },
 
     {
-        id: "joao-arthur",
-        name: "João Arthur",
-        image: "personagens/joao-arthur.png"
+        id:"joao-arthur",
+        name:"João Arthur",
+        description:"Gente boa, engraçado e fã de basquete e futebol.",
+        ability:"Atletismo",
+        image:"personagens/joao-arthur.png",
+        intro:"Beleza. Se tiver algum problema, a gente resolve juntos."
     },
 
     {
-        id: "kaio",
-        name: "Kaio",
-        image: "personagens/kaio.png"
+        id:"kaio",
+        name:"Kaio",
+        description:"Engraçado, gente boa e fã de Neymar e handebol.",
+        ability:"Reflexo",
+        image:"personagens/kaio.png",
+        intro:"Mano... isso definitivamente não estava nos planos de hoje."
     },
 
     {
-        id: "joao-felipe",
-        name: "João Felipe",
-        image: "personagens/joao-felipe.png"
+        id:"joao-felipe",
+        name:"João Felipe",
+        description:"Sonolento, engraçado e gente boa.",
+        ability:"Modo Soneca",
+        image:"personagens/joao-felipe.png",
+        intro:"Eu só queria ir pra casa dormir..."
     },
 
     {
-        id: "lucca",
-        name: "Lucca",
-        image: "personagens/lucca.png"
+        id:"lucca",
+        name:"Lucca",
+        description:"Engraçado, estiloso e conhecido pelo famoso 'PARAA'.",
+        ability:"Performance",
+        image:"personagens/lucca.png",
+        intro:"PARAA! A gente está preso numa escola agora?!"
     }
 
 ];
 
 
-/* ==================================================
-   VARIÁVEIS
-================================================== */
+/* =====================================================
+   CENÁRIOS
+===================================================== */
+
+const scenes = {
+
+    salaAula:"cenarios/sala-aula.png",
+    corredor:"cenarios/corredor.png",
+    biblioteca:"cenarios/biblioteca.png",
+    robotica:"cenarios/robotica.png",
+    matematica:"cenarios/matematica.png",
+    geografia:"cenarios/geografia.png",
+    cantina:"cenarios/cantina.png",
+    quadra:"cenarios/quadra.png",
+    direcao:"cenarios/direcao.png",
+    sala13:"cenarios/sala-13.png"
+
+};
+
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+const introLines = [
+
+    "Tudo começou em uma sexta-feira aparentemente normal...",
+
+    "Era o último período. A turma só queria ir embora.",
+
+    "Até que o sinal tocou.",
+
+    "Mas quando os alunos tentaram sair...",
+
+    "A porta estava trancada.",
+
+    "Os celulares ficaram sem sinal.",
+
+    "As luzes começaram a piscar.",
+
+    "E o relógio da escola parou.",
+
+    "13:13.",
+
+    "Então uma mensagem apareceu.",
+
+    "ENCONTREM A SALA 13.",
+
+    "O problema era simples...",
+
+    "A escola não tinha uma Sala 13.",
+
+    "E foi aí que tudo começou."
+
+];
+
+let introIndex = 0;
+
+
+/* =====================================================
+   ESTADO DO JOGO
+===================================================== */
 
 let selectedCharacter = null;
 
 let dialogueIndex = 0;
 
-let currentScene = 0;
-
 let clues = [];
+
+let investigationDone = false;
 
 let gameStarted = false;
 
 
-/* ==================================================
+/* =====================================================
    ELEMENTOS
-================================================== */
+===================================================== */
 
-const menu = document.getElementById("menu");
-const characterScreen = document.getElementById("characters");
-const gameScreen = document.getElementById("game");
+const introScreen =
+    document.getElementById("introScreen");
 
-const characterGrid = document.getElementById("characterGrid");
+const menuScreen =
+    document.getElementById("menuScreen");
 
-const background = document.getElementById("background");
-const playerCharacter = document.getElementById("player-character");
+const characterScreen =
+    document.getElementById("characterScreen");
 
-const speaker = document.getElementById("speaker");
-const dialogueText = document.getElementById("dialogueText");
+const gameScreen =
+    document.getElementById("gameScreen");
 
-const choices = document.getElementById("choices");
+const introText =
+    document.getElementById("introText");
 
-const nextButton = document.getElementById("nextButton");
+const introButton =
+    document.getElementById("introButton");
 
-const clueCount = document.getElementById("clueCount");
+const skipIntro =
+    document.getElementById("skipIntro");
+
+const startGame =
+    document.getElementById("startGame");
+
+const continueGame =
+    document.getElementById("continueGame");
+
+const charactersContainer =
+    document.getElementById("characters");
+
+const scene =
+    document.getElementById("scene");
+
+const playerCharacter =
+    document.getElementById("playerCharacter");
+
+const hudCharacter =
+    document.getElementById("hudCharacter");
+
+const hudClues =
+    document.getElementById("hudClues");
+
+const dialogue =
+    document.getElementById("dialogue");
+
+const speaker =
+    document.getElementById("speaker");
+
+const dialogueText =
+    document.getElementById("dialogueText");
+
+const choices =
+    document.getElementById("choices");
+
+const choiceButtons =
+    document.getElementById("choiceButtons");
+
+const choiceTitle =
+    document.getElementById("choiceTitle");
+
+const investigation =
+    document.getElementById("investigation");
+
+const locations =
+    document.getElementById("locations");
+
+const clueModal =
+    document.getElementById("clueModal");
+
+const clueText =
+    document.getElementById("clueText");
+
+const notification =
+    document.getElementById("notification");
+
+const ending =
+    document.getElementById("ending");
+
+const endingLabel =
+    document.getElementById("endingLabel");
+
+const endingTitle =
+    document.getElementById("endingTitle");
+
+const endingText =
+    document.getElementById("endingText");
 
 
-/* ==================================================
-   CRIAR CARDS
-================================================== */
+/* =====================================================
+   TROCAR TELA
+===================================================== */
 
-function createCharacterCards() {
+function showScreen(screen){
 
-    characterGrid.innerHTML = "";
+    document
+        .querySelectorAll(".screen")
+        .forEach(s => s.classList.remove("active"));
+
+    screen.classList.add("active");
+
+}
+
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+function updateIntro(){
+
+    introText.classList.remove("fade");
+
+    void introText.offsetWidth;
+
+    introText.classList.add("fade");
+
+    introText.textContent =
+        introLines[introIndex];
+
+    if(introIndex === introLines.length - 1){
+
+        introButton.textContent =
+            "COMEÇAR";
+
+    }else{
+
+        introButton.textContent =
+            "CONTINUAR";
+
+    }
+
+}
+
+
+introButton.addEventListener("click",()=>{
+
+    if(
+        introIndex <
+        introLines.length - 1
+    ){
+
+        introIndex++;
+
+        updateIntro();
+
+    }else{
+
+        showScreen(menuScreen);
+
+    }
+
+});
+
+
+skipIntro.addEventListener("click",()=>{
+
+    showScreen(menuScreen);
+
+});
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+startGame.addEventListener("click",()=>{
+
+    showCharacterSelection();
+
+});
+
+
+continueGame.addEventListener("click",()=>{
+
+    const saved =
+        localStorage.getItem(
+            "misterioTurmaSave"
+        );
+
+    if(saved){
+
+        try{
+
+            const data =
+                JSON.parse(saved);
+
+            selectedCharacter =
+                characters.find(
+                    c => c.id === data.character
+                );
+
+            clues =
+                data.clues || [];
+
+            startStory(true);
+
+        }catch{
+
+            showCharacterSelection();
+
+        }
+
+    }else{
+
+        showCharacterSelection();
+
+    }
+
+});
+
+
+/* =====================================================
+   SELEÇÃO
+===================================================== */
+
+function showCharacterSelection(){
+
+    showScreen(characterScreen);
+
+    charactersContainer.innerHTML = "";
 
     characters.forEach(character => {
 
-        const card = document.createElement("div");
+        const card =
+            document.createElement("div");
 
-        card.className = "character-card";
+        card.className =
+            "character-card";
 
         card.innerHTML = `
 
             <img
-                class="character-image"
+                class="character-img"
                 src="${character.image}"
                 alt="${character.name}"
-                onerror="this.style.opacity='.2'"
             >
 
             <div class="character-name">
                 ${character.name}
             </div>
 
+            <div class="character-desc">
+                ${character.description}
+            </div>
+
+            <div class="ability">
+                Habilidade: ${character.ability}
+            </div>
+
         `;
 
-        card.onclick = () => {
+        card.addEventListener("click",()=>{
 
-            document.querySelectorAll(".character-card")
-                .forEach(c => c.classList.remove("selected"));
+            document
+                .querySelectorAll(".character-card")
+                .forEach(c =>
+                    c.classList.remove("selected")
+                );
 
             card.classList.add("selected");
 
-            selectedCharacter = character;
+            selectedCharacter =
+                character;
 
-            setTimeout(() => {
+            setTimeout(()=>{
 
-                startGame();
+                startStory(false);
 
-            }, 250);
+            },350);
 
-        };
+        });
 
-        characterGrid.appendChild(card);
+        charactersContainer.appendChild(card);
 
     });
 
 }
 
-createCharacterCards();
 
+/* =====================================================
+   INICIAR HISTÓRIA
+===================================================== */
 
-/* ==================================================
-   ABRIR ESCOLHA
-================================================== */
-
-function openCharacters() {
-
-    menu.classList.remove("active");
-
-    characterScreen.classList.add("active");
-
-}
-
-
-/* ==================================================
-   COMEÇAR JOGO
-================================================== */
-
-function startGame() {
-
-    if (!selectedCharacter) return;
-
-    characterScreen.classList.remove("active");
-
-    gameScreen.classList.add("active");
-
-    playerCharacter.src = selectedCharacter.image;
-
-    dialogueIndex = 0;
-
-    currentScene = 0;
-
-    clues = [];
+function startStory(loadSave){
 
     gameStarted = true;
 
-    saveGame();
+    if(!loadSave){
 
-    loadScene();
+        clues = [];
+
+        investigationDone = false;
+
+    }
+
+    showScreen(gameScreen);
+
+    hudCharacter.textContent =
+        selectedCharacter.name;
+
+    hudClues.textContent =
+        clues.length;
+
+    playerCharacter.src =
+        selectedCharacter.image;
+
+    playerCharacter.alt =
+        selectedCharacter.name;
+
+    setScene("salaAula");
+
+    dialogueIndex = 0;
+
+    showDialogue();
 
 }
 
 
-/* ==================================================
+/* =====================================================
+   CENÁRIO
+===================================================== */
+
+function setScene(sceneName){
+
+    scene.style.backgroundImage =
+        `url("${scenes[sceneName]}")`;
+
+}
+
+
+/* =====================================================
    DIÁLOGOS
-================================================== */
+===================================================== */
 
-const dialogues = [
+const story = [
 
     {
-        background: "cenarios/sala-aula.png",
-
-        speaker: () => selectedCharacter.name,
-
-        text: () => {
-
-            const lines = {
-
-                "cibelly":
-                    "Finalmente acabou a aula... agora eu só quero ir embora.",
-
-                "fernanda":
-                    "Ainda bem que a aula terminou. Só espero que a gente consiga sair logo.",
-
-                "rosana":
-                    "Alguma coisa está estranha aqui. Eu tenho certeza.",
-
-                "anna-laura":
-                    "O relógio está marcando um horário diferente do meu celular...",
-
-                "camylle":
-                    "Gente, vocês perceberam que está tudo silencioso?",
-
-                "avylla":
-                    "Estranho... o relógio parece estar exatamente parado.",
-
-                "costa":
-                    "Espero que esteja tudo bem. Vamos descobrir o que aconteceu.",
-
-                "joao-arthur":
-                    "Bora sair daqui. Esse lugar está ficando estranho.",
-
-                "kaio":
-                    "Ué... por que ninguém consegue abrir a porta?",
-
-                "joao-felipe":
-                    "Eu só queria ir embora e dormir...",
-
-                "lucca":
-                    "PARAAAA! Por que essa porta não abre?!"
-
-            };
-
-            return lines[selectedCharacter.id];
-
-        }
-
+        scene:"salaAula",
+        speaker:"Você",
+        text:()=>selectedCharacter.intro
     },
 
     {
-        background: "cenarios/sala-aula.png",
-
-        speaker: "Beto",
-
-        text:
-            "Pessoal, calma. Vou tentar abrir a porta."
-
+        scene:"salaAula",
+        speaker:"Beto",
+        text:"Pessoal, calma. Vou tentar abrir a porta."
     },
 
     {
-        background: "cenarios/sala-aula.png",
-
-        speaker: "Beto",
-
-        text:
-            "Não adianta. A porta está realmente trancada."
-
+        scene:"salaAula",
+        speaker:"Beto",
+        text:"Não adianta. A porta está realmente trancada."
     },
 
     {
-        background: "cenarios/corredor.png",
-
-        speaker: "Douglas",
-
-        text:
-            "Todo mundo fica junto. Ninguém vai sair andando sozinho pela escola."
-
+        scene:"salaAula",
+        speaker:"Douglas",
+        text:"Todo mundo fica junto. Ninguém vai sair andando sozinho pela escola."
     },
 
     {
-        background: "cenarios/robotica.png",
-
-        speaker: "Mara",
-
-        text:
-            "Isso não parece ser um problema comum. O sistema eletrônico da escola também está bloqueado."
-
+        scene:"salaAula",
+        speaker:"Mara",
+        text:"Isso não parece ser um problema comum. O sistema eletrônico da escola também está bloqueado."
     },
 
     {
-        background: "cenarios/sala-aula.png",
-
-        speaker: "Desconhecido",
-
-        text:
-            "ENCONTREM A SALA 13."
-
+        scene:"salaAula",
+        speaker:"???",
+        text:"ENCONTREM A SALA 13."
     },
 
     {
-        background: "cenarios/sala-aula.png",
-
-        speaker: "Beto",
-
-        text:
-            "Sala 13...? Essa sala não existe."
-
+        scene:"salaAula",
+        speaker:"Beto",
+        text:"Sala 13...? Essa sala não existe."
     },
 
     {
-        background: "cenarios/sala-aula.png",
-
-        speaker: "Narrador",
-
-        text:
-            "Mas se a Sala 13 não existe... por que alguém está pedindo para vocês encontrá-la?"
-
+        scene:"salaAula",
+        speaker:"Narrador",
+        text:"Mas se a Sala 13 não existe... por que alguém está pedindo para vocês encontrá-la?"
     }
 
 ];
 
 
-/* ==================================================
-   CARREGAR CENA
-================================================== */
+/* =====================================================
+   MOSTRAR DIÁLOGO
+===================================================== */
 
-function loadScene() {
+function showDialogue(){
 
-    const scene = dialogues[dialogueIndex];
+    if(
+        dialogueIndex >=
+        story.length
+    ){
 
-    if (!scene) {
-
-        showInvestigation();
+        showChoice();
 
         return;
 
     }
 
-    background.src = scene.background;
+    const line =
+        story[dialogueIndex];
 
-    if (typeof scene.speaker === "function") {
+    setScene(line.scene);
 
-        speaker.textContent = scene.speaker();
+    speaker.textContent =
+        line.speaker;
 
-    } else {
+    dialogueText.textContent =
+        typeof line.text === "function"
+        ? line.text()
+        : line.text;
 
-        speaker.textContent = scene.speaker;
+    playerCharacter.classList.remove("talk");
 
-    }
+    void playerCharacter.offsetWidth;
 
-    if (typeof scene.text === "function") {
-
-        dialogueText.textContent = scene.text();
-
-    } else {
-
-        dialogueText.textContent = scene.text;
-
-    }
-
-    choices.innerHTML = "";
+    playerCharacter.classList.add("talk");
 
 }
 
 
-/* ==================================================
-   PRÓXIMO DIÁLOGO
-================================================== */
+/* =====================================================
+   AVANÇAR DIÁLOGO
+===================================================== */
 
-function nextDialogue() {
+dialogue.addEventListener("click",()=>{
+
+    if(
+        choices.classList.contains("active")
+        ||
+        investigation.classList.contains("active")
+        ||
+        clueModal.classList.contains("active")
+        ||
+        ending.classList.contains("active")
+    ){
+
+        return;
+
+    }
 
     dialogueIndex++;
 
-    loadScene();
+    showDialogue();
+
+});
+
+
+/* =====================================================
+   PRIMEIRA ESCOLHA
+===================================================== */
+
+function showChoice(){
+
+    choices.classList.add("active");
+
+    choiceTitle.textContent =
+        "O que vocês fazem primeiro?";
+
+    choiceButtons.innerHTML = "";
+
+    addChoice(
+        "Investigar a escola",
+        ()=>{
+            choices.classList.remove("active");
+            openInvestigation();
+        }
+    );
+
+    addChoice(
+        "Tentar arrombar a porta",
+        ()=>{
+            choices.classList.remove("active");
+
+            setScene("corredor");
+
+            showNotification(
+                "A porta não parece ser o único problema..."
+            );
+
+            setTimeout(
+                openInvestigation,
+                900
+            );
+
+        }
+    );
+
+    addChoice(
+        "Procurar alguém da escola",
+        ()=>{
+            choices.classList.remove("active");
+
+            setScene("corredor");
+
+            showNotification(
+                "Talvez algum professor saiba o que está acontecendo."
+            );
+
+            setTimeout(
+                openInvestigation,
+                900
+            );
+
+        }
+    );
 
 }
 
 
-/* ==================================================
+/* =====================================================
+   ADICIONAR ESCOLHA
+===================================================== */
+
+function addChoice(text,callback){
+
+    const button =
+        document.createElement("button");
+
+    button.className =
+        "choice-btn";
+
+    button.textContent =
+        text;
+
+    button.addEventListener(
+        "click",
+        callback
+    );
+
+    choiceButtons.appendChild(button);
+
+}
+
+
+/* =====================================================
    INVESTIGAÇÃO
-================================================== */
+===================================================== */
 
-function showInvestigation() {
+const locationData = [
 
-    speaker.textContent = "Investigação";
+    {
+        id:"biblioteca",
+        name:"Biblioteca",
+        description:"Livros antigos, documentos e plantas da escola.",
+        scene:"biblioteca",
+        clue:"Você encontrou uma planta antiga da escola. Nela existe uma sala que não aparece na planta atual: SALA 13."
+    },
 
-    dialogueText.textContent =
-        "A escola continua bloqueada. Onde você quer procurar pistas?";
+    {
+        id:"robotica",
+        name:"Robótica",
+        description:"Computadores, placas e equipamentos eletrônicos.",
+        scene:"robotica",
+        clue:"O computador mostra um bloqueio automático iniciado exatamente às 13:13."
+    },
 
-    choices.innerHTML = "";
+    {
+        id:"matematica",
+        name:"Sala de Matemática",
+        description:"Quadro, carteiras e materiais antigos.",
+        scene:"matematica",
+        clue:"Você encontrou um painel numérico escondido atrás do quadro."
+    },
 
-    const locations = [
+    {
+        id:"geografia",
+        name:"Sala de Geografia",
+        description:"Mapas antigos e materiais de geografia.",
+        scene:"geografia",
+        clue:"Anny encontra um mapa antigo mostrando uma parte da escola que foi modificada."
+    },
 
-        {
-            name: "📚 Biblioteca",
-            scene: "cenarios/biblioteca.png",
-            clue: "Você encontrou uma planta antiga da escola. Nela existe uma sala que não aparece na planta atual: SALA 13."
-        },
+    {
+        id:"cantina",
+        name:"Cantina",
+        description:"Mesas, armários e caixas antigas.",
+        scene:"cantina",
+        clue:"Em uma caixa antiga você encontra um pequeno papel com o número 13."
+    },
 
-        {
-            name: "🤖 Laboratório de Robótica",
-            scene: "cenarios/robotica.png",
-            clue: "O computador mostra um bloqueio automático iniciado exatamente às 13:13."
-        },
+    {
+        id:"quadra",
+        name:"Quadra",
+        description:"O local onde a turma costuma jogar.",
+        scene:"quadra",
+        clue:"Você encontrou uma porta antiga que parece levar para uma parte esquecida da escola."
+    },
 
-        {
-            name: "🧮 Sala de Matemática",
-            scene: "cenarios/matematica.png",
-            clue: "Você encontrou um painel numérico escondido atrás do quadro."
-        },
+    {
+        id:"direcao",
+        name:"Direção",
+        description:"A sala onde ficam documentos importantes.",
+        scene:"direcao",
+        clue:"Dentro de uma gaveta existe um caderno antigo contendo os nomes da turma."
+    }
 
-        {
-            name: "🌎 Sala de Geografia",
-            scene: "cenarios/geografia.png",
-            clue: "Anny encontra um mapa antigo mostrando uma parte da escola que foi modificada."
-        },
+];
 
-        {
-            name: "🍕 Cantina",
-            scene: "cenarios/cantina.png",
-            clue: "Em uma caixa antiga você encontra um pequeno papel com o número 13."
-        },
 
-        {
-            name: "🏀 Quadra",
-            scene: "cenarios/quadra.png",
-            clue: "Você encontrou uma porta antiga que parece levar para uma parte esquecida da escola."
-        },
+function openInvestigation(){
 
-        {
-            name: "🔒 Sala da Direção",
-            scene: "cenarios/direcao.png",
-            clue: "Dentro de uma gaveta existe um caderno antigo contendo os nomes da turma."
+    investigation.classList.add("active");
+
+    renderLocations();
+
+}
+
+
+function renderLocations(){
+
+    locations.innerHTML = "";
+
+    locationData.forEach(location => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "location";
+
+        if(
+            clues.includes(location.id)
+        ){
+
+            card.classList.add("found");
+
         }
 
-    ];
+        card.innerHTML = `
 
-    locations.forEach(location => {
+            <h3>
+                ${location.name}
+            </h3>
 
-        const button = document.createElement("button");
+            <p>
+                ${location.description}
+            </p>
 
-        button.className = "choice-button";
+        `;
 
-        button.textContent = location.name;
+        card.addEventListener(
+            "click",
+            ()=>investigate(location)
+        );
 
-        button.onclick = () => {
-
-            background.src = location.scene;
-
-            addClue(location.clue);
-
-            dialogueText.textContent =
-                "Você encontrou uma pista neste local.";
-
-            speaker.textContent =
-                "Investigação";
-
-            choices.innerHTML = "";
-
-        };
-
-        choices.appendChild(button);
+        locations.appendChild(card);
 
     });
 
-    nextButton.style.display = "none";
-
 }
 
 
-/* ==================================================
-   PISTAS
-================================================== */
+/* =====================================================
+   INVESTIGAR LOCAL
+===================================================== */
 
-function addClue(text) {
+function investigate(location){
 
-    if (clues.includes(text)) return;
+    setScene(location.scene);
 
-    clues.push(text);
+    if(
+        clues.includes(location.id)
+    ){
 
-    clueCount.textContent = clues.length;
+        showNotification(
+            "Vocês já investigaram este local."
+        );
 
-    document.getElementById("clueText").textContent = text;
+        return;
 
-    document.getElementById("clueModal").style.display = "block";
+    }
+
+    clues.push(location.id);
+
+    hudClues.textContent =
+        clues.length;
+
+    clueText.textContent =
+        location.clue;
+
+    clueModal.classList.add("active");
 
     saveGame();
 
 }
 
 
-function closeClue() {
+/* =====================================================
+   FECHAR PISTA
+===================================================== */
 
-    document.getElementById("clueModal").style.display = "none";
+document
+    .getElementById("closeClue")
+    .addEventListener("click",()=>{
+
+        clueModal.classList.remove("active");
+
+        renderLocations();
+
+    });
+
+
+/* =====================================================
+   TERMINAR INVESTIGAÇÃO
+===================================================== */
+
+document
+    .getElementById("finishInvestigation")
+    .addEventListener("click",()=>{
+
+        if(clues.length < 3){
+
+            showNotification(
+                "Ainda existem muitos lugares que vocês não investigaram."
+            );
+
+            return;
+
+        }
+
+        investigation.classList.remove("active");
+
+        continueAfterInvestigation();
+
+    });
+
+
+/* =====================================================
+   APÓS INVESTIGAÇÃO
+===================================================== */
+
+function continueAfterInvestigation(){
+
+    setScene("corredor");
+
+    speaker.textContent =
+        "Narrador";
+
+    dialogueText.textContent =
+        "As pistas começam a formar uma sequência. O número 13 aparece em todos os lugares.";
+
+    dialogue.style.display =
+        "block";
+
+    dialogue.onclick = null;
+
+    setTimeout(()=>{
+
+        dialogue.style.display =
+            "none";
+
+        showSecondChoice();
+
+    },100);
 
 }
 
 
-/* ==================================================
-   SALVAMENTO
-================================================== */
+/* =====================================================
+   SEGUNDA ESCOLHA
+===================================================== */
 
-function saveGame() {
+function showSecondChoice(){
 
-    if (!selectedCharacter) return;
+    choices.classList.add("active");
 
-    const save = {
+    choiceTitle.textContent =
+        "O que as pistas indicam?";
 
-        character: selectedCharacter.id,
+    choiceButtons.innerHTML = "";
 
-        dialogueIndex: dialogueIndex,
+    addChoice(
+        "Procurar a Sala 13",
+        ()=>{
+            choices.classList.remove("active");
+            goToRoom13();
+        }
+    );
 
-        clues: clues,
+    addChoice(
+        "Perguntar para Anny",
+        ()=>{
+            choices.classList.remove("active");
 
-        gameStarted: gameStarted
+            setScene("geografia");
+
+            showNotification(
+                "Anny parece reconhecer o mapa antigo."
+            );
+
+            setTimeout(
+                askAnny,
+                700
+            );
+
+        }
+    );
+
+    addChoice(
+        "Perguntar para Beto",
+        ()=>{
+            choices.classList.remove("active");
+
+            setScene("matematica");
+
+            showNotification(
+                "Beto fica em silêncio por alguns segundos."
+            );
+
+            setTimeout(
+                askBeto,
+                700
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ANY
+===================================================== */
+
+function askAnny(){
+
+    speaker.textContent =
+        "Anny";
+
+    dialogueText.textContent =
+        "Eu já vi esse mapa antes... essa parte antiga da escola foi fechada há muitos anos.";
+
+    dialogue.style.display =
+        "block";
+
+    dialogue.onclick = ()=>{
+        dialogue.style.display =
+            "none";
+
+        goToRoom13();
+    };
+
+}
+
+
+/* =====================================================
+   BETO
+===================================================== */
+
+function askBeto(){
+
+    speaker.textContent =
+        "Beto";
+
+    dialogueText.textContent =
+        "Eu disse que a Sala 13 não existe... mas talvez eu tenha sido rápido demais ao dizer isso.";
+
+    dialogue.style.display =
+        "block";
+
+    dialogue.onclick = ()=>{
+        dialogue.style.display =
+            "none";
+
+        goToRoom13();
+    };
+
+}
+
+
+/* =====================================================
+   SALA 13
+===================================================== */
+
+function goToRoom13(){
+
+    setScene("sala13");
+
+    playerCharacter.style.display =
+        "none";
+
+    speaker.textContent =
+        "Narrador";
+
+    dialogueText.textContent =
+        "Depois de seguir as pistas, vocês encontram uma porta escondida. Acima dela, um número quase apagado: 13.";
+
+    dialogue.style.display =
+        "block";
+
+    dialogue.onclick = ()=>{
+
+        dialogue.style.display =
+            "none";
+
+        revealRoom13();
+
+    };
+
+}
+
+
+/* =====================================================
+   REVELAR SALA 13
+===================================================== */
+
+function revealRoom13(){
+
+    setScene("sala13");
+
+    choices.classList.add("active");
+
+    choiceTitle.textContent =
+        "A porta da Sala 13 está diante de vocês.";
+
+    choiceButtons.innerHTML = "";
+
+    addChoice(
+        "Abrir a porta",
+        ()=>{
+            choices.classList.remove("active");
+
+            trueEnding();
+
+        }
+    );
+
+    addChoice(
+        "Ir embora",
+        ()=>{
+            choices.classList.remove("active");
+
+            escapeEnding();
+
+        }
+    );
+
+    addChoice(
+        "Investigar mais antes",
+        ()=>{
+            choices.classList.remove("active");
+
+            if(
+                clues.length >= 6
+            ){
+
+                trueEnding();
+
+            }else{
+
+                mysteryEnding();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   FINAIS
+===================================================== */
+
+function showEnding(
+    label,
+    title,
+    text
+){
+
+    endingLabel.textContent =
+        label;
+
+    endingTitle.textContent =
+        title;
+
+    endingText.textContent =
+        text;
+
+    ending.classList.add("active");
+
+    saveGame();
+
+}
+
+
+/* FINAL VERDADEIRO */
+
+function trueEnding(){
+
+    showEnding(
+        "FINAL VERDADEIRO",
+        "A VERDADE",
+        "Dentro da Sala 13, vocês encontram registros antigos que explicam o bloqueio da escola e revelam por que aquela sala foi retirada dos mapas. A turma finalmente entende o que aconteceu. O mistério foi resolvido."
+    );
+
+}
+
+
+/* FINAL DE FUGA */
+
+function escapeEnding(){
+
+    showEnding(
+        "FINAL 2",
+        "A FUGA",
+        "A turma decide não descobrir o que existe dentro da Sala 13. Depois de alguns minutos, as portas da escola finalmente se abrem. Vocês vão embora... mas ninguém consegue esquecer o que aconteceu às 13:13."
+    );
+
+}
+
+
+/* FINAL MISTERIOSO */
+
+function mysteryEnding(){
+
+    showEnding(
+        "FINAL 3",
+        "AINDA HÁ SEGREDOS",
+        "Vocês encontram a Sala 13, mas não conseguiram juntar pistas suficientes. Antes que possam descobrir toda a verdade, as luzes apagam. Quando voltam, a porta desapareceu."
+    );
+
+}
+
+
+/* =====================================================
+   REINICIAR
+===================================================== */
+
+document
+    .getElementById("restartGame")
+    .addEventListener("click",()=>{
+
+        localStorage.removeItem(
+            "misterioTurmaSave"
+        );
+
+        location.reload();
+
+    });
+
+
+/* =====================================================
+   SALVAR
+===================================================== */
+
+function saveGame(){
+
+    if(!selectedCharacter){
+        return;
+    }
+
+    const data = {
+
+        character:
+            selectedCharacter.id,
+
+        clues:
+            clues,
+
+        date:
+            Date.now()
 
     };
 
     localStorage.setItem(
-        "misterioDaTurmaSave",
-        JSON.stringify(save)
+        "misterioTurmaSave",
+        JSON.stringify(data)
     );
 
 }
 
 
-/* ==================================================
-   CONTINUAR
-================================================== */
+/* =====================================================
+   NOTIFICAÇÃO
+===================================================== */
 
-function continueGame() {
+function showNotification(text){
 
-    const saved =
-        localStorage.getItem("misterioDaTurmaSave");
+    notification.textContent =
+        text;
 
-    if (!saved) {
-
-        alert("Ainda não existe um jogo salvo.");
-
-        return;
-
-    }
-
-    const data = JSON.parse(saved);
-
-    selectedCharacter =
-        characters.find(c => c.id === data.character);
-
-    clues = data.clues || [];
-
-    dialogueIndex = data.dialogueIndex || 0;
-
-    clueCount.textContent = clues.length;
-
-    menu.classList.remove("active");
-
-    gameScreen.classList.add("active");
-
-    playerCharacter.src =
-        selectedCharacter.image;
-
-    gameStarted = true;
-
-    loadScene();
-
-}
-
-
-/* ==================================================
-   EXTRAS
-================================================== */
-
-function showCredits() {
-
-    alert(
-        "O MISTÉRIO DA TURMA\n\n" +
-        "Um jogo criado pela turma.\n\n" +
-        "Personagens, histórias e ideias criadas pelos alunos.\n\n" +
-        "Em constante desenvolvimento 🎮"
+    notification.classList.add(
+        "show"
     );
 
+    setTimeout(()=>{
+
+        notification.classList.remove(
+            "show"
+        );
+
+    },2200);
+
 }
 
 
-/* ==================================================
-   VOLTAR / AUTOSAVE
-================================================== */
+/* =====================================================
+   INICIALIZAÇÃO
+===================================================== */
 
-window.addEventListener("beforeunload", () => {
-
-    if (gameStarted) {
-
-        saveGame();
-
-    }
-
-});
+updateIntro();
 
 </script>
 
