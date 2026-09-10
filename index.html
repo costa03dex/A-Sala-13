@@ -1,2171 +1,256 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A SALA 13</title>
-
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body{
-    background:#080808;
-    color:#eee;
-    font-family:Arial,Helvetica,sans-serif;
-    min-height:100vh;
-    overflow:hidden;
-}
-
-button{
-    font-family:inherit;
-    cursor:pointer;
-}
-
-.screen{
-    display:none;
-    width:100vw;
-    height:100vh;
-}
-
-.screen.active{
-    display:flex;
-}
-
 /* =========================
-   MENU
-========================= */
-
-#menu{
-    align-items:center;
-    justify-content:center;
-    background:
-        radial-gradient(circle at center,#252525 0%,#111 45%,#050505 100%);
-}
-
-.menu-box{
-    width:min(600px,90%);
-    text-align:center;
-    padding:50px 30px;
-    border:1px solid #444;
-    background:rgba(10,10,10,.9);
-    box-shadow:0 0 40px rgba(0,0,0,.8);
-}
-
-.logo{
-    font-size:clamp(42px,8vw,82px);
-    letter-spacing:8px;
-    font-weight:900;
-    margin-bottom:10px;
-}
-
-.subtitle{
-    color:#999;
-    letter-spacing:3px;
-    margin-bottom:40px;
-}
-
-.menu-button{
-    display:block;
-    width:100%;
-    margin:12px 0;
-    padding:17px;
-    border:1px solid #555;
-    background:#171717;
-    color:#fff;
-    font-size:17px;
-    font-weight:bold;
-    transition:.2s;
-}
-
-.menu-button:hover{
-    background:#2a2a2a;
-    border-color:#aaa;
-    transform:translateY(-2px);
-}
-
-.version{
-    margin-top:30px;
-    color:#666;
-    font-size:12px;
-}
-
-/* =========================
-   INTRO
-========================= */
-
-#intro{
-    align-items:center;
-    justify-content:center;
-    padding:30px;
-    background:#0c0c0c;
-}
-
-.intro-box{
-    max-width:850px;
-    padding:45px;
-    border:1px solid #444;
-    background:#151515;
-    box-shadow:0 0 30px #000;
-}
-
-.intro-box h1{
-    font-size:42px;
-    margin-bottom:25px;
-}
-
-.intro-box p{
-    color:#ccc;
-    line-height:1.8;
-    margin-bottom:16px;
-}
-
-.warning{
-    border-left:3px solid #aaa;
-    padding:15px;
-    margin:25px 0;
-    background:#101010;
-    color:#bbb;
-}
-
-.big-button{
-    padding:15px 30px;
-    background:#eee;
-    color:#080808;
-    border:0;
-    font-weight:bold;
-    font-size:16px;
-}
-
-.big-button:hover{
-    background:#fff;
-}
-
-/* =========================
-   SELEÇÃO
-========================= */
-
-#selection{
-    flex-direction:column;
-    overflow:auto;
-    background:#0b0b0b;
-    padding:30px;
-}
-
-.selection-title{
-    text-align:center;
-    margin-bottom:25px;
-}
-
-.selection-title h1{
-    font-size:38px;
-}
-
-.selection-title p{
-    color:#888;
-    margin-top:8px;
-}
-
-.characters-grid{
-    width:min(1100px,100%);
-    margin:auto;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:14px;
-}
-
-.character-card{
-    background:#151515;
-    border:1px solid #333;
-    padding:15px;
-    text-align:center;
-    transition:.2s;
-}
-
-.character-card:hover{
-    border-color:#888;
-    transform:translateY(-3px);
-}
-
-.character-card.selected{
-    border:2px solid #eee;
-    background:#222;
-}
-
-.character-card img{
-    width:100%;
-    height:150px;
-    object-fit:contain;
-}
-
-.character-card h3{
-    margin-top:5px;
-}
-
-.character-card p{
-    color:#999;
-    font-size:13px;
-    margin-top:6px;
-}
-
-.ability{
-    color:#ddd!important;
-    margin-top:10px!important;
-}
-
-.selection-bottom{
-    text-align:center;
-    margin:25px 0;
-}
-
-#selectedInfo{
-    color:#aaa;
-    margin-bottom:15px;
-}
-
-/* =========================
-   JOGO
-========================= */
-
-#game{
-    position:relative;
-    display:none;
-    background:#000;
-    overflow:hidden;
-}
-
-#game.active{
-    display:block;
-}
-
-#scene{
-    position:absolute;
-    inset:0;
-    background-size:cover;
-    background-position:center;
-    background-repeat:no-repeat;
-    filter:brightness(.58);
-    z-index:1;
-}
-
-.scene-overlay{
-    position:absolute;
-    inset:0;
-    background:
-        linear-gradient(to bottom,
-        rgba(0,0,0,.2),
-        transparent 45%,
-        rgba(0,0,0,.7));
-    z-index:2;
-    pointer-events:none;
-}
-
-/* =========================
-   PERSONAGENS
+   ÁREA DOS PERSONAGENS
 ========================= */
 
 #characters{
     position:absolute;
-    left:3%;
-    right:3%;
-    bottom:205px;
-    height:390px;
+    top:70px;
+    left:2%;
+    right:2%;
+    bottom:215px;
+
     display:grid;
-    grid-template-columns:repeat(6,1fr);
+    grid-template-columns:repeat(6, 1fr);
+    grid-template-rows:1fr 1fr;
+
     align-items:end;
-    gap:5px;
-    z-index:5;
+    justify-items:center;
+
+    gap:4px;
+
+    z-index:10;
+
     pointer-events:none;
 }
 
+/* Cada personagem */
+
 .student{
+    width:100%;
     height:100%;
+
     display:flex;
     flex-direction:column;
     justify-content:flex-end;
     align-items:center;
+
     opacity:.65;
-    transition:.25s;
+
+    transition:
+        opacity .25s,
+        transform .25s;
+
+    position:relative;
 }
+
+/* Personagem que está falando */
 
 .student.speaking{
     opacity:1;
     transform:translateY(-8px);
+    z-index:20;
 }
+
+/* Personagem escolhido */
 
 .student.protagonist{
     opacity:.85;
 }
 
+/* Imagem */
+
 .student img{
-    max-width:100%;
-    width:145px;
-    height:290px;
+    width:130px;
+    height:230px;
+
     object-fit:contain;
-    object-position:bottom;
-    filter:drop-shadow(0 5px 5px rgba(0,0,0,.8));
+    object-position:center bottom;
+
+    filter:drop-shadow(0 5px 5px rgba(0,0,0,.9));
 }
 
+/* Nome */
+
 .student-name{
-    background:rgba(0,0,0,.85);
-    border:1px solid #444;
+    background:#080808;
+    color:#fff;
+
+    border:1px solid #555;
+
     padding:5px 9px;
+
     font-size:11px;
     white-space:nowrap;
+
+    margin-top:2px;
 }
+
+/* Quem está falando */
 
 .student.speaking .student-name{
     border-color:#fff;
-    color:#fff;
+    background:#000;
 }
+
+/* Protagonista */
 
 .student.protagonist .student-name::after{
     content:" ★";
     color:#fff;
 }
 
+
 /* =========================
-   DIÁLOGO
+   CAIXA DE DIÁLOGO
 ========================= */
 
 #dialogueBox{
+
     position:absolute;
-    left:4%;
-    right:4%;
-    bottom:20px;
-    min-height:160px;
-    background:rgba(8,8,8,.96);
-    border:1px solid #666;
-    z-index:20;
-    padding:20px 25px;
-    box-shadow:0 0 25px #000;
+
+    left:3%;
+    right:3%;
+    bottom:15px;
+
+    height:185px;
+
+    /* IMPORTANTE:
+       SEM TRANSPARÊNCIA */
+    background:#080808;
+
+    border:2px solid #555;
+
+    z-index:100;
+
+    padding:18px 22px;
+
+    box-shadow:0 0 30px #000;
+
+    overflow:hidden;
 }
+
+
+/* Nome de quem fala */
 
 #speaker{
+
     display:inline-block;
-    font-size:19px;
-    font-weight:bold;
+
+    color:#fff;
+
+    background:#111;
+
+    border:1px solid #666;
+
+    padding:6px 12px;
+
     margin-bottom:10px;
-    border-bottom:1px solid #666;
-    padding-bottom:5px;
+
+    font-size:17px;
+
+    font-weight:bold;
 }
+
+
+/* Texto */
 
 #dialogue{
-    color:#ddd;
-    font-size:17px;
-    line-height:1.55;
+
+    color:#eee;
+
+    font-size:16px;
+
+    line-height:1.5;
+
+    width:calc(100% - 190px);
+
     min-height:55px;
-    padding-right:180px;
 }
 
+
+/* =========================
+   BOTÃO CONTINUAR
+========================= */
+
 #nextButton{
+
     position:absolute;
+
     right:20px;
     bottom:20px;
-    padding:13px 22px;
+
+    width:155px;
+
+    padding:14px;
+
     background:#eee;
+
     color:#080808;
+
     border:0;
+
+    font-size:14px;
+
     font-weight:bold;
-    min-width:150px;
+
+    cursor:pointer;
+
+    z-index:110;
 }
 
 #nextButton:hover{
+
     background:#fff;
+
     transform:translateY(-2px);
-}
-
-/* =========================
-   ESCOLHAS
-========================= */
-
-#choices{
-    display:none;
-    gap:10px;
-    margin-top:12px;
-    padding-right:170px;
-}
-
-.choice{
-    flex:1;
-    padding:12px;
-    background:#181818;
-    color:#eee;
-    border:1px solid #555;
-    text-align:left;
-}
-
-.choice:hover{
-    background:#303030;
-    border-color:#aaa;
-}
-
-#choices.show{
-    display:flex;
 }
 
 #nextButton.hidden{
     display:none;
 }
 
-/* =========================
-   HUD
-========================= */
-
-#hud{
-    position:absolute;
-    top:15px;
-    left:15px;
-    z-index:30;
-    background:rgba(0,0,0,.75);
-    border:1px solid #444;
-    padding:10px 14px;
-    font-size:12px;
-    color:#aaa;
-}
-
-#location{
-    position:absolute;
-    top:15px;
-    right:15px;
-    z-index:30;
-    background:rgba(0,0,0,.75);
-    border:1px solid #444;
-    padding:10px 14px;
-    color:#ccc;
-    font-size:12px;
-}
 
 /* =========================
-   PISTAS
-========================= */
-
-#cluePanel{
-    position:absolute;
-    top:55px;
-    right:15px;
-    z-index:30;
-    width:230px;
-    background:rgba(0,0,0,.88);
-    border:1px solid #444;
-    padding:14px;
-    display:none;
-}
-
-#cluePanel h3{
-    margin-bottom:10px;
-    font-size:14px;
-}
-
-#clueList{
-    color:#aaa;
-    font-size:12px;
-    line-height:1.6;
-}
-
-/* =========================
-   FINAL
-========================= */
-
-#ending{
-    align-items:center;
-    justify-content:center;
-    background:
-        radial-gradient(circle,#252525,#080808 70%);
-    padding:25px;
-}
-
-.ending-box{
-    max-width:800px;
-    text-align:center;
-    border:1px solid #555;
-    background:#121212;
-    padding:50px 35px;
-    box-shadow:0 0 40px #000;
-}
-
-.ending-box h1{
-    font-size:42px;
-    margin-bottom:25px;
-}
-
-.ending-box p{
-    color:#ccc;
-    line-height:1.8;
-    margin-bottom:25px;
-}
-
-.final-credit{
-    color:#777;
-    font-size:13px;
-    margin-top:25px;
-}
-
-/* =========================
-   RESPONSIVO
-========================= */
-
-@media(max-width:800px){
-
-    .characters-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    #characters{
-        bottom:190px;
-        height:270px;
-    }
-
-    .student img{
-        height:210px;
-    }
-
-    #dialogueBox{
-        left:2%;
-        right:2%;
-        bottom:10px;
-        padding:14px;
-        min-height:170px;
-    }
-
-    #dialogue{
-        padding-right:0;
-        font-size:14px;
-    }
-
-    #choices{
-        padding-right:0;
-        flex-direction:column;
-    }
-
-    #nextButton{
-        position:relative;
-        right:auto;
-        bottom:auto;
-        margin-top:10px;
-        width:100%;
-    }
-
-    #hud{
-        font-size:10px;
-    }
-
-    #location{
-        font-size:10px;
-    }
-}
-</style>
-</head>
-
-<body>
-
-<!-- =========================
-     MENU
-========================= -->
-
-<section id="menu" class="screen active">
-
-    <div class="menu-box">
-
-        <div class="logo">A SALA 13</div>
-
-        <div class="subtitle">
-            UMA HISTÓRIA • 11 ESCOLHAS • UM MISTÉRIO
-        </div>
-
-        <button class="menu-button" id="newGameButton">
-            NOVO JOGO
-        </button>
-
-        <button class="menu-button" id="continueButton">
-            CONTINUAR
-        </button>
-
-        <div class="version">
-            Projeto independente • Jullya Games
-        </div>
-
-    </div>
-
-</section>
-
-<!-- =========================
-     INTRO
-========================= -->
-
-<section id="intro" class="screen">
-
-    <div class="intro-box">
-
-        <h1>A SALA 13</h1>
-
-        <p>
-            Sexta-feira. Última aula.
-            Tudo que a turma queria era ir embora.
-        </p>
-
-        <p>
-            Mas quando o sinal toca, a porta da sala não abre.
-            Os celulares ficam sem sinal.
-            As luzes começam a piscar.
-        </p>
-
-        <p>
-            Então o relógio da escola para exatamente em:
-            <strong>13:13</strong>.
-        </p>
-
-        <div class="warning">
-            Uma mensagem aparece no sistema da escola:
-            <br><br>
-            <strong>“ENCONTREM A SALA 13.”</strong>
-        </div>
-
-        <p>
-            O problema?
-            Oficialmente, essa sala nunca existiu.
-        </p>
-
-        <p>
-            Escolha um personagem e descubra o que realmente aconteceu.
-        </p>
-
-        <button class="big-button" id="introContinueButton">
-            ESCOLHER PERSONAGEM
-        </button>
-
-    </div>
-
-</section>
-
-<!-- =========================
-     SELEÇÃO
-========================= -->
-
-<section id="selection" class="screen">
-
-    <div class="selection-title">
-
-        <h1>ESCOLHA SEU PERSONAGEM</h1>
-
-        <p>
-            Você jogará como o personagem escolhido.
-        </p>
-
-    </div>
-
-    <div class="characters-grid" id="characterGrid"></div>
-
-    <div class="selection-bottom">
-
-        <div id="selectedInfo">
-            Nenhum personagem selecionado.
-        </div>
-
-        <button class="big-button" id="startGameButton">
-            COMEÇAR A INVESTIGAÇÃO
-        </button>
-
-    </div>
-
-</section>
-
-<!-- =========================
-     JOGO
-========================= -->
-
-<section id="game" class="screen">
-
-    <div id="scene"></div>
-    <div class="scene-overlay"></div>
-
-    <div id="hud">
-        A SALA 13<br>
-        Investigação: <span id="clueCount">0</span>/5
-    </div>
-
-    <div id="location">
-        LOCAL
-    </div>
-
-    <div id="cluePanel">
-
-        <h3>PISTAS ENCONTRADAS</h3>
-
-        <div id="clueList">
-            Nenhuma pista ainda.
-        </div>
-
-    </div>
-
-    <div id="characters"></div>
-
-    <div id="dialogueBox">
-
-        <div id="speaker">
-            Narrador
-        </div>
-
-        <div id="dialogue">
-            ...
-        </div>
-
-        <div id="choices">
-
-            <button class="choice" id="choice1">
-                Escolha 1
-            </button>
-
-            <button class="choice" id="choice2">
-                Escolha 2
-            </button>
-
-        </div>
-
-        <button id="nextButton">
-            CONTINUAR ▶
-        </button>
-
-    </div>
-
-</section>
-
-<!-- =========================
-     FINAL
-========================= -->
-
-<section id="ending" class="screen">
-
-    <div class="ending-box">
-
-        <h1 id="endingTitle">
-            FINAL
-        </h1>
-
-        <p id="endingText">
-            ...
-        </p>
-
-        <button class="big-button" id="restartButton">
-            JOGAR NOVAMENTE
-        </button>
-
-        <div class="final-credit">
-            Deus abençoe por jogar!<br>
-            Indique a um amigo!<br><br>
-            com carinho,<br>
-            Anna Jullya
-        </div>
-
-    </div>
-
-</section>
-
-<script>
-
-/* =====================================================
-   PERSONAGENS
-===================================================== */
-
-const characters = [
-
-    {
-        name:"Cibelly",
-        file:"cibelly.png",
-        personality:"Engraçada, descontraída e tranquila.",
-        ability:"Descontração"
-    },
-
-    {
-        name:"Fernanda",
-        file:"fernanda.png",
-        personality:"Mais quieta, educada, engraçada e observadora.",
-        ability:"Observação Silenciosa"
-    },
-
-    {
-        name:"Rosana",
-        file:"rosana.png",
-        personality:"Gótica, nerd e apaixonada por animes, séries e K-pop.",
-        ability:"Investigação"
-    },
-
-    {
-        name:"Anna Laura",
-        file:"anna-laura.png",
-        personality:"Educada, inteligente, nerd e apaixonada por K-pop e animes.",
-        ability:"Lógica"
-    },
-
-    {
-        name:"Camylle",
-        file:"camylle.png",
-        personality:"Educada, simpática e apaixonada por K-pop e coisas nerds.",
-        ability:"Empatia"
-    },
-
-    {
-        name:"Avylla",
-        file:"avylla.png",
-        personality:"Ama matemática, livros da roça e é muito engraçada.",
-        ability:"Matemática"
-    },
-
-    {
-        name:"Costa",
-        file:"costa.png",
-        personality:"Educada, engraçada, cristã e apaixonada por música e violão.",
-        ability:"Música"
-    },
-
-    {
-        name:"João Arthur",
-        file:"joao-arthur.png",
-        personality:"Gente boa, engraçado e apaixonado por basquete e futebol.",
-        ability:"Atletismo"
-    },
-
-    {
-        name:"Kaio",
-        file:"kaio.png",
-        personality:"Engraçado, gente boa e apaixonado por Neymar e handebol.",
-        ability:"Reflexo"
-    },
-
-    {
-        name:"João Felipe",
-        file:"joao-felipe.png",
-        personality:"Sonolento, engraçado e gente boa.",
-        ability:"Modo Soneca"
-    },
-
-    {
-        name:"Lucca",
-        file:"lucca.png",
-        personality:"Engraçado, performático e sempre soltando um “PARAA”.",
-        ability:"Performance"
-    }
-
-];
-
-
-/* =====================================================
-   NPCs
-===================================================== */
-
-const npcs = {
-
-    "Beto":{
-        name:"Professor Beto"
-    },
-
-    "Douglas":{
-        name:"Professor Douglas"
-    },
-
-    "Mara":{
-        name:"Professora Mara"
-    },
-
-    "Anny":{
-        name:"Professora Anny"
-    }
-
-};
-
-
-/* =====================================================
-   HISTÓRIA
-===================================================== */
-
-const story = [
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Narrador",
-        text:"A última aula da sexta-feira finalmente chegou. A turma só queria ir embora."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Narrador",
-        text:"O sinal toca. Todo mundo começa a guardar as coisas."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Cibelly",
-        text:"Finalmente! Eu já estava quase dormindo aqui."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"João Felipe",
-        text:"Quase? Eu já dormi umas três vezes."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Lucca",
-        text:"PARAA! Gente, vamos embora!"
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Douglas",
-        text:"Calma, pessoal. Vamos sair todos juntos."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Narrador",
-        text:"Douglas tenta abrir a porta."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Douglas",
-        text:"Ué..."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Douglas",
-        text:"A porta está trancada."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Kaio",
-        text:"Como assim trancada?"
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Fernanda",
-        text:"Meu celular também ficou sem sinal."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Anna Laura",
-        text:"Isso não parece normal."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Narrador",
-        text:"As luzes piscam."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Narrador",
-        text:"O relógio da sala para exatamente em 13:13."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Mara",
-        text:"O sistema elétrico da escola também está estranho."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Rosana",
-        text:"Olhem para o computador."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Narrador",
-        text:"Uma mensagem aparece na tela."
-    },
-
-    {
-        scene:"sala-aula.png",
-        location:"Sala de aula",
-        speaker:"Narrador",
-        text:"ENCONTREM A SALA 13."
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor",
-        speaker:"Beto",
-        text:"Essa sala não existe."
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor",
-        speaker:"Costa",
-        text:"Então por que alguém mandaria a gente procurar por ela?"
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor",
-        speaker:"Beto",
-        text:"Eu não sei."
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor",
-        speaker:"Beto",
-        text:"Mas existe uma coisa que vocês precisam entender: nem tudo que está na escola aparece nos mapas atuais."
-    },
-
-    {
-        scene:"biblioteca.png",
-        location:"Biblioteca",
-        speaker:"Anny",
-        text:"Vocês estão procurando alguma coisa?"
-    },
-
-    {
-        scene:"biblioteca.png",
-        location:"Biblioteca",
-        speaker:"Anny",
-        text:"Eu conheço praticamente todos os lugares desta escola."
-    },
-
-    {
-        scene:"biblioteca.png",
-        location:"Biblioteca",
-        speaker:"Anny",
-        text:"Mas a Sala 13... esse nome é antigo."
-    },
-
-    {
-        scene:"biblioteca.png",
-        location:"Biblioteca",
-        speaker:"Anny",
-        text:"Muito antigo."
-    },
-
-    {
-        scene:"biblioteca.png",
-        location:"Biblioteca",
-        speaker:"Narrador",
-        text:"Anny pega um mapa antigo da escola."
-    },
-
-    {
-        scene:"biblioteca.png",
-        location:"Biblioteca",
-        speaker:"Anny",
-        text:"Olhem aqui."
-    },
-
-    {
-        scene:"biblioteca.png",
-        location:"Biblioteca",
-        speaker:"Anny",
-        text:"Essa parte da escola foi modificada."
-    },
-
-    {
-        scene:"matematica.png",
-        location:"Sala de Matemática",
-        speaker:"Avylla",
-        text:"Se o mapa estiver certo, existe um espaço que não aparece na planta atual."
-    },
-
-    {
-        scene:"matematica.png",
-        location:"Sala de Matemática",
-        speaker:"Anna Laura",
-        text:"Então a escola pode ter escondido uma sala."
-    },
-
-    {
-        scene:"matematica.png",
-        location:"Sala de Matemática",
-        speaker:"Beto",
-        text:"Talvez."
-    },
-
-    {
-        scene:"matematica.png",
-        location:"Sala de Matemática",
-        speaker:"Beto",
-        text:"Mas eu recomendo que vocês tenham cuidado."
-    },
-
-    {
-        scene:"robotica.png",
-        location:"Sala de Robótica",
-        speaker:"Mara",
-        text:"Encontrei algo no sistema."
-    },
-
-    {
-        scene:"robotica.png",
-        location:"Sala de Robótica",
-        speaker:"Mara",
-        text:"Alguém está controlando alguns equipamentos remotamente."
-    },
-
-    {
-        scene:"robotica.png",
-        location:"Sala de Robótica",
-        speaker:"Rosana",
-        text:"Isso significa que a mensagem foi enviada de dentro da escola?"
-    },
-
-    {
-        scene:"robotica.png",
-        location:"Sala de Robótica",
-        speaker:"Mara",
-        text:"É possível."
-    },
-
-    {
-        scene:"cantina.png",
-        location:"Cantina",
-        speaker:"Narrador",
-        text:"A turma segue para a cantina. Um barulho estranho vem de uma porta lateral."
-    },
-
-    {
-        scene:"cantina.png",
-        location:"Cantina",
-        speaker:"João Arthur",
-        text:"Vocês ouviram isso?"
-    },
-
-    {
-        scene:"cantina.png",
-        location:"Cantina",
-        speaker:"Kaio",
-        text:"Ouvi."
-    },
-
-    {
-        scene:"cantina.png",
-        location:"Cantina",
-        speaker:"Cibelly",
-        text:"Se aparecer alguma coisa estranha eu vou sair correndo."
-    },
-
-    {
-        scene:"quadra.png",
-        location:"Quadra",
-        speaker:"João Arthur",
-        text:"A gente consegue passar pela quadra e chegar no outro corredor."
-    },
-
-    {
-        scene:"quadra.png",
-        location:"Quadra",
-        speaker:"Lucca",
-        text:"PARAA! Eu não vou ficar perdido nessa escola."
-    },
-
-    {
-        scene:"direcao.png",
-        location:"Direção",
-        speaker:"Douglas",
-        text:"A direção está vazia."
-    },
-
-    {
-        scene:"direcao.png",
-        location:"Direção",
-        speaker:"Narrador",
-        text:"Sobre a mesa existe um velho caderno."
-    },
-
-    {
-        scene:"direcao.png",
-        location:"Direção",
-        speaker:"Fernanda",
-        text:"Tem nomes aqui."
-    },
-
-    {
-        scene:"direcao.png",
-        location:"Direção",
-        speaker:"Fernanda",
-        text:"São os nomes da nossa turma."
-    },
-
-    {
-        scene:"direcao.png",
-        location:"Direção",
-        speaker:"Costa",
-        text:"Isso não pode ser coincidência."
-    },
-
-    {
-        scene:"direcao.png",
-        location:"Direção",
-        speaker:"Beto",
-        text:"Então vocês encontraram."
-    },
-
-    {
-        scene:"direcao.png",
-        location:"Direção",
-        speaker:"Rosana",
-        text:"Você sabia disso?"
-    },
-
-    {
-        scene:"direcao.png",
-        location:"Direção",
-        speaker:"Beto",
-        text:"Eu sabia que existia alguma coisa aqui."
-    },
-
-    {
-        scene:"direcao.png",
-        location:"Direção",
-        speaker:"Beto",
-        text:"Mas nunca consegui descobrir toda a verdade."
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor antigo",
-        speaker:"Narrador",
-        text:"Atrás de um armário, a turma encontra uma passagem estreita."
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor antigo",
-        speaker:"Avylla",
-        text:"Pelo mapa, é aqui."
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor antigo",
-        speaker:"Anna Laura",
-        text:"A parede parece diferente."
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor antigo",
-        speaker:"Mara",
-        text:"Tem um painel escondido aqui."
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor antigo",
-        speaker:"Narrador",
-        text:"Depois de alguns segundos, o painel acende."
-    },
-
-    {
-        scene:"corredor.png",
-        location:"Corredor antigo",
-        speaker:"Narrador",
-        text:"Uma porta aparece atrás da parede."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Narrador",
-        text:"A porta se abre lentamente."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Narrador",
-        text:"Dentro da sala existem computadores antigos, caixas e documentos."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Mara",
-        text:"Esses equipamentos são antigos..."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Mara",
-        text:"Mas alguém ligou tudo recentemente."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Rosana",
-        text:"Então alguém queria que a gente encontrasse essa sala."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Beto",
-        text:"Exatamente."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Beto",
-        text:"Agora vocês precisam descobrir o motivo."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Narrador",
-        text:"No centro da sala existe um último documento."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Narrador",
-        text:"Ele contém informações sobre a história da escola e sobre a existência da Sala 13."
-    },
-
-    {
-        scene:"sala-13.png",
-        location:"Sala 13",
-        speaker:"Narrador",
-        text:"A verdade finalmente está diante de vocês."
-    }
-
-];
-
-
-/* =====================================================
-   VARIÁVEIS
-===================================================== */
-
-let selectedCharacter = null;
-let currentStep = 0;
-let clues = [];
-let waitingChoice = false;
-let choiceTimeout = null;
-
-
-/* =====================================================
-   ELEMENTOS
-===================================================== */
-
-const menu = document.getElementById("menu");
-const intro = document.getElementById("intro");
-const selection = document.getElementById("selection");
-const game = document.getElementById("game");
-const ending = document.getElementById("ending");
-
-const scene = document.getElementById("scene");
-const charactersContainer = document.getElementById("characters");
-
-const speaker = document.getElementById("speaker");
-const dialogue = document.getElementById("dialogue");
-
-const choices = document.getElementById("choices");
-const choice1 = document.getElementById("choice1");
-const choice2 = document.getElementById("choice2");
-const nextButton = document.getElementById("nextButton");
-
-const locationText = document.getElementById("location");
-
-const clueCount = document.getElementById("clueCount");
-const cluePanel = document.getElementById("cluePanel");
-const clueList = document.getElementById("clueList");
-
-const selectedInfo = document.getElementById("selectedInfo");
-
-
-/* =====================================================
-   TROCAR TELA
-===================================================== */
-
-function showScreen(screen){
-
-    document.querySelectorAll(".screen").forEach(s=>{
-        s.classList.remove("active");
-    });
-
-    screen.classList.add("active");
-}
-
-
-/* =====================================================
-   MENU
-===================================================== */
-
-document.getElementById("newGameButton").addEventListener("click",function(){
-
-    localStorage.removeItem("sala13Save");
-
-    selectedCharacter = null;
-    currentStep = 0;
-    clues = [];
-
-    showScreen(intro);
-
-});
-
-
-document.getElementById("continueButton").addEventListener("click",function(){
-
-    continueGame();
-
-});
-
-
-document.getElementById("introContinueButton").addEventListener("click",function(){
-
-    loadCharacters();
-    showScreen(selection);
-
-});
-
-
-/* =====================================================
-   PERSONAGENS
-===================================================== */
-
-function loadCharacters(){
-
-    const grid = document.getElementById("characterGrid");
-
-    grid.innerHTML = "";
-
-    characters.forEach((character,index)=>{
-
-        const card = document.createElement("div");
-
-        card.className = "character-card";
-
-        card.innerHTML = `
-
-            <img src="${character.file}" alt="${character.name}">
-
-            <h3>${character.name}</h3>
-
-            <p>${character.personality}</p>
-
-            <p class="ability">
-                Habilidade: <strong>${character.ability}</strong>
-            </p>
-
-        `;
-
-        card.addEventListener("click",function(){
-
-            document
-                .querySelectorAll(".character-card")
-                .forEach(c=>c.classList.remove("selected"));
-
-            card.classList.add("selected");
-
-            selectedCharacter = character;
-
-            selectedInfo.innerHTML =
-                `Você escolheu <strong>${character.name}</strong> — Habilidade: ${character.ability}`;
-
-        });
-
-        grid.appendChild(card);
-
-    });
-
-}
-
-
-/* =====================================================
-   COMEÇAR
-===================================================== */
-
-document.getElementById("startGameButton").addEventListener("click",function(){
-
-    if(!selectedCharacter){
-
-        selectedInfo.innerHTML =
-            "⚠️ Escolha um personagem primeiro.";
-
-        return;
-
-    }
-
-    startGame();
-
-});
-
-
-function startGame(){
-
-    currentStep = 0;
-    clues = [];
-    waitingChoice = false;
-
-    createCharacters();
-
-    showScreen(game);
-
-    updateClues();
-
-    showStory();
-
-    saveGame();
-
-}
-
-
-/* =====================================================
-   CRIAR TODOS OS PERSONAGENS
-===================================================== */
-
-function createCharacters(){
-
-    charactersContainer.innerHTML = "";
-
-    characters.forEach(character=>{
-
-        const student = document.createElement("div");
-
-        student.className = "student";
-
-        if(
-            selectedCharacter &&
-            character.name === selectedCharacter.name
-        ){
-            student.classList.add("protagonist");
-        }
-
-        student.dataset.name = character.name;
-
-        student.innerHTML = `
-
-            <img
-                src="${character.file}"
-                alt="${character.name}"
-            >
-
-            <div class="student-name">
-                ${character.name}
-            </div>
-
-        `;
-
-        charactersContainer.appendChild(student);
-
-    });
-
-}
-
-
-/* =====================================================
-   MOSTRAR HISTÓRIA
-===================================================== */
-
-function showStory(){
-
-    if(currentStep >= story.length){
-
-        finishGame();
-
-        return;
-    }
-
-    waitingChoice = false;
-
-    choices.classList.remove("show");
-    nextButton.classList.remove("hidden");
-
-    const step = story[currentStep];
-
-    scene.style.backgroundImage =
-        `url("${step.scene}")`;
-
-    locationText.textContent =
-        step.location;
-
-    speaker.textContent =
-        step.speaker;
-
-    dialogue.textContent =
-        step.text;
-
-    document
-        .querySelectorAll(".student")
-        .forEach(student=>{
-
-            student.classList.remove("speaking");
-
-            if(
-                student.dataset.name === step.speaker
-            ){
-                student.classList.add("speaking");
-            }
-
-        });
-
-
-    /* NPCs */
-
-    if(step.speaker === "Beto"){
-        speaker.textContent = "Professor Beto";
-    }
-
-    if(step.speaker === "Mara"){
-        speaker.textContent = "Professora Mara";
-    }
-
-    if(step.speaker === "Anny"){
-        speaker.textContent = "Professora Anny";
-    }
-
-    if(step.speaker === "Douglas"){
-        speaker.textContent = "Professor Douglas";
-    }
-
-
-    /*
-       QUANDO O PERSONAGEM ESCOLHIDO FALA,
-       APARECEM AS ESCOLHAS.
-    */
-
-    if(
-        selectedCharacter &&
-        step.speaker === selectedCharacter.name
-    ){
-
-        showChoices();
-
-    }
-
-
-    checkForClue(step);
-
-    saveGame();
-
-}
-
-
-/* =====================================================
-   AVANÇAR
-===================================================== */
-
-function advanceDialogue(){
-
-    if(waitingChoice){
-        return;
-    }
-
-    currentStep++;
-
-    showStory();
-
-}
-
-
-/* =====================================================
-   BOTÃO CONTINUAR
-===================================================== */
-
-nextButton.addEventListener("click",function(){
-
-    advanceDialogue();
-
-});
-
-
-/* =====================================================
-   TECLADO
-===================================================== */
-
-document.addEventListener("keydown",function(event){
-
-    if(!game.classList.contains("active")){
-        return;
-    }
-
-    if(
-        event.key === "Enter" ||
-        event.key === " "
-    ){
-
-        event.preventDefault();
-
-        if(!waitingChoice){
-            advanceDialogue();
-        }
-
-    }
-
-});
-
-
-/* =====================================================
    ESCOLHAS
-===================================================== */
+========================= */
 
-function showChoices(){
+#choices{
 
-    waitingChoice = true;
+    display:none;
 
-    nextButton.classList.add("hidden");
+    gap:10px;
 
-    choices.classList.add("show");
+    width:calc(100% - 190px);
 
-    const ability =
-        selectedCharacter
-        ? selectedCharacter.ability
-        : "";
-
-    if(ability === "Investigação"){
-
-        choice1.textContent =
-            "🔎 Procurar pistas imediatamente";
-
-        choice2.textContent =
-            "👀 Observar o comportamento de todos";
-
-    }
-
-    else if(ability === "Lógica"){
-
-        choice1.textContent =
-            "🧠 Analisar cuidadosamente a situação";
-
-        choice2.textContent =
-            "🔐 Procurar uma solução lógica";
-
-    }
-
-    else if(ability === "Empatia"){
-
-        choice1.textContent =
-            "💬 Conversar com os colegas";
-
-        choice2.textContent =
-            "❤️ Tentar acalmar a turma";
-
-    }
-
-    else if(ability === "Matemática"){
-
-        choice1.textContent =
-            "📐 Analisar o mapa";
-
-        choice2.textContent =
-            "🔢 Procurar padrões nos números";
-
-    }
-
-    else if(ability === "Música"){
-
-        choice1.textContent =
-            "🎵 Prestar atenção aos sons";
-
-        choice2.textContent =
-            "🎸 Seguir o barulho estranho";
-
-    }
-
-    else if(ability === "Atletismo"){
-
-        choice1.textContent =
-            "🏃 Explorar rapidamente o corredor";
-
-        choice2.textContent =
-            "⚽ Verificar a quadra";
-
-    }
-
-    else if(ability === "Reflexo"){
-
-        choice1.textContent =
-            "⚡ Reagir rapidamente";
-
-        choice2.textContent =
-            "👀 Observar antes de agir";
-
-    }
-
-    else if(ability === "Modo Soneca"){
-
-        choice1.textContent =
-            "😴 Ficar quieto e observar";
-
-        choice2.textContent =
-            "😄 Fazer uma piada para aliviar o clima";
-
-    }
-
-    else if(ability === "Performance"){
-
-        choice1.textContent =
-            "🎭 Fazer uma performance para distrair";
-
-        choice2.textContent =
-            "🗣️ Chamar a atenção de todos";
-
-    }
-
-    else if(ability === "Observação Silenciosa"){
-
-        choice1.textContent =
-            "👁️ Observar sem falar";
-
-        choice2.textContent =
-            "🤫 Procurar algo escondido";
-
-    }
-
-    else{
-
-        choice1.textContent =
-            "🔍 Investigar a situação";
-
-        choice2.textContent =
-            "💬 Conversar com os colegas";
-
-    }
-
+    margin-top:5px;
 }
 
-
-/* =====================================================
-   ESCOLHA 1
-===================================================== */
-
-choice1.addEventListener("click",function(event){
-
-    event.stopPropagation();
-
-    if(!waitingChoice){
-        return;
-    }
-
-    waitingChoice = false;
-
-    choices.classList.remove("show");
-
-    dialogue.textContent =
-        `${selectedCharacter.name} tomou uma decisão. A turma segue em frente.`;
-
-    nextButton.classList.remove("hidden");
-
-});
-
-
-/* =====================================================
-   ESCOLHA 2
-===================================================== */
-
-choice2.addEventListener("click",function(event){
-
-    event.stopPropagation();
-
-    if(!waitingChoice){
-        return;
-    }
-
-    waitingChoice = false;
-
-    choices.classList.remove("show");
-
-    dialogue.textContent =
-        `${selectedCharacter.name} decidiu seguir outro caminho. Talvez essa escolha faça diferença.`;
-
-    nextButton.classList.remove("hidden");
-
-});
-
-
-/* =====================================================
-   PISTAS
-===================================================== */
-
-function checkForClue(step){
-
-    const clueTexts = [
-
-        "Essa sala não existe.",
-
-        "Essa parte da escola foi modificada.",
-
-        "Alguém está controlando alguns equipamentos remotamente.",
-
-        "São os nomes da nossa turma.",
-
-        "A verdade finalmente está diante de vocês."
-
-    ];
-
-    if(
-        clueTexts.includes(step.text) &&
-        !clues.includes(step.text)
-    ){
-
-        clues.push(step.text);
-
-        updateClues();
-
-    }
-
+#choices.show{
+    display:flex;
 }
 
+.choice{
 
-function updateClues(){
+    flex:1;
 
-    clueCount.textContent =
-        clues.length;
+    padding:11px;
 
-    if(clues.length === 0){
+    background:#151515;
 
-        cluePanel.style.display = "none";
+    color:#fff;
 
-        clueList.innerHTML =
-            "Nenhuma pista ainda.";
+    border:1px solid #555;
 
-        return;
+    font-size:13px;
 
-    }
+    text-align:left;
 
-    cluePanel.style.display = "block";
-
-    clueList.innerHTML =
-        clues
-            .map((clue,index)=>
-                `${index+1}. ${clue}`
-            )
-            .join("<br><br>");
-
+    cursor:pointer;
 }
 
+.choice:hover{
 
-/* =====================================================
-   SALVAR
-===================================================== */
+    background:#292929;
 
-function saveGame(){
-
-    if(!selectedCharacter){
-        return;
-    }
-
-    const save = {
-
-        character:selectedCharacter.name,
-
-        step:currentStep,
-
-        clues:clues
-
-    };
-
-    localStorage.setItem(
-        "sala13Save",
-        JSON.stringify(save)
-    );
-
+    border-color:#aaa;
 }
-
-
-/* =====================================================
-   CONTINUAR
-===================================================== */
-
-function continueGame(){
-
-    const saved =
-        localStorage.getItem("sala13Save");
-
-    if(!saved){
-
-        showScreen(intro);
-
-        return;
-
-    }
-
-    try{
-
-        const data =
-            JSON.parse(saved);
-
-        const character =
-            characters.find(
-                c => c.name === data.character
-            );
-
-        if(!character){
-
-            showScreen(intro);
-
-            return;
-
-        }
-
-        selectedCharacter = character;
-
-        currentStep =
-            Number(data.step) || 0;
-
-        clues =
-            Array.isArray(data.clues)
-            ? data.clues
-            : [];
-
-        createCharacters();
-
-        showScreen(game);
-
-        updateClues();
-
-        showStory();
-
-    }
-
-    catch(error){
-
-        console.error(error);
-
-        localStorage.removeItem("sala13Save");
-
-        showScreen(intro);
-
-    }
-
-}
-
-
-/* =====================================================
-   FINAL
-===================================================== */
-
-function finishGame(){
-
-    waitingChoice = false;
-
-    choices.classList.remove("show");
-
-    nextButton.classList.add("hidden");
-
-    let title =
-        "FINAL — A VERDADE";
-
-    let text =
-
-        `Vocês finalmente encontraram a Sala 13.
-
-        Depois de investigar os documentos,
-        mapas e equipamentos antigos,
-        a turma percebe que aquela sala fazia parte
-        de uma área antiga da escola que havia sido esquecida.
-
-        A mensagem não era uma ameaça.
-
-        Era um convite para descobrir uma parte
-        da história que ninguém mais lembrava.
-
-        Mas uma pergunta continua:
-
-        quem ligou o sistema naquela noite?
-
-        Talvez essa resposta fique para outra história...`;
-
-    if(clues.length < 3){
-
-        title =
-            "FINAL — FUGA";
-
-        text =
-
-            `A turma conseguiu encontrar uma saída
-            antes de descobrir toda a verdade.
-
-            Todos saíram da escola em segurança.
-
-            Porém, ninguém conseguiu explicar
-            quem enviou a mensagem:
-
-            “ENCONTREM A SALA 13.”
-
-            Talvez o mistério ainda não tenha acabado.`;
-
-    }
-
-    document.getElementById("endingTitle")
-        .textContent = title;
-
-    document.getElementById("endingText")
-        .textContent = text;
-
-    showScreen(ending);
-
-    localStorage.removeItem("sala13Save");
-
-}
-
-
-/* =====================================================
-   RECOMEÇAR
-===================================================== */
-
-document.getElementById("restartButton")
-    .addEventListener("click",function(){
-
-        selectedCharacter = null;
-        currentStep = 0;
-        clues = [];
-        waitingChoice = false;
-
-        loadCharacters();
-
-        showScreen(selection);
-
-    });
-
-
-/* =====================================================
-   CONTINUE VISÍVEL OU NÃO
-===================================================== */
-
-function updateContinueButton(){
-
-    const save =
-        localStorage.getItem("sala13Save");
-
-    document.getElementById("continueButton").style.display =
-        save ? "block" : "none";
-
-}
-
-updateContinueButton();
-
-</script>
-
-</body>
-</html>
