@@ -508,23 +508,30 @@ button{
     pointer-events:none;
 }
 
-/* Personagem escolhido pelo jogador: fica à esquerda
-   quando outra pessoa está falando. */
+/* Quando outra pessoa fala, os dois personagens formam
+   um pequeno grupo centralizado, lado a lado. */
 .character-sprite{
 
-    left:8%;
+    left:50%;
 
-    transform:translateX(-50%);
+    right:auto;
+
+    /* A borda direita fica perto do centro, deixando
+       apenas um pequeno espaço entre os sprites. */
+    transform:translateX(calc(-100% - 12px));
 
     opacity:1;
 }
 
-/* Outro personagem que está falando: fica à direita. */
 .speaker-sprite{
 
-    right:8%;
+    left:50%;
 
-    transform:translateX(50%);
+    right:auto;
+
+    /* O segundo personagem fica imediatamente ao lado
+       do jogador, sem ser jogado para o canto da tela. */
+    transform:translateX(12px);
 
     opacity:1;
 }
@@ -961,11 +968,15 @@ button{
     }
 
     .character-sprite{
-        left:18%;
+        left:50%;
+        right:auto;
+        transform:translateX(calc(-100% - 8px));
     }
 
     .speaker-sprite{
-        right:18%;
+        left:50%;
+        right:auto;
+        transform:translateX(8px);
     }
 
     .character-sprite.player-center{
@@ -981,6 +992,14 @@ button{
 
     .character-sprite.player-center.talking{
         transform:translateX(-50%) scale(1.05);
+    }
+
+    .character-sprite.talking{
+        transform:translateX(calc(-100% - 8px)) scale(1.02);
+    }
+
+    .speaker-sprite.talking{
+        transform:translateX(8px) scale(1.02);
     }
 
     .dialogue-area{
