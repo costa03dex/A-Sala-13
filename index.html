@@ -475,20 +475,16 @@ button{
    PERSONAGEM
 ===================================================== */
 
-.character-sprite{
+.character-sprite,
+.speaker-sprite{
 
     position:absolute;
 
     bottom:0;
 
-    left:50%;
+    height:min(68%,590px);
 
-    transform:
-        translateX(-50%);
-
-    height:min(75%,650px);
-
-    max-width:45%;
+    max-width:34%;
 
     object-fit:contain;
 
@@ -500,14 +496,80 @@ button{
             rgba(0,0,0,.75)
         );
 
-    transition:.3s;
+    transition:
+        left .35s ease,
+        right .35s ease,
+        transform .35s ease,
+        opacity .25s ease,
+        filter .25s ease;
+
+    z-index:3;
+
+    pointer-events:none;
 }
 
-.character-sprite.talking{
+/* Personagem escolhido pelo jogador: fica à esquerda
+   quando outra pessoa está falando. */
+.character-sprite{
 
-    transform:
-        translateX(-50%)
-        scale(1.025);
+    left:8%;
+
+    transform:translateX(-50%);
+
+    opacity:1;
+}
+
+/* Outro personagem que está falando: fica à direita. */
+.speaker-sprite{
+
+    right:8%;
+
+    transform:translateX(50%);
+
+    opacity:1;
+}
+
+/* Quando o próprio jogador fala, ele ocupa o centro
+   e o segundo personagem desaparece. */
+.character-sprite.player-center{
+
+    left:50%;
+
+    height:min(84%,720px);
+
+    max-width:45%;
+
+    transform:translateX(-50%) scale(1.04);
+
+    z-index:4;
+}
+
+.speaker-sprite.hidden-sprite,
+.character-sprite.hidden-sprite{
+
+    opacity:0;
+
+    visibility:hidden;
+}
+
+.character-sprite.talking,
+.speaker-sprite.talking{
+
+    filter:
+        drop-shadow(
+            0 14px 22px
+            rgba(0,0,0,.85)
+        );
+}
+
+.character-sprite.player-center.talking{
+
+    transform:translateX(-50%) scale(1.07);
+}
+
+.speaker-sprite.talking{
+
+    transform:translateX(50%) scale(1.025);
 }
 
 /* =====================================================
@@ -890,12 +952,35 @@ button{
     .logo{
         letter-spacing:3px;
     }
+    .character-sprite,
+    .speaker-sprite{
+
+        height:54%;
+
+        max-width:43%;
+    }
 
     .character-sprite{
+        left:18%;
+    }
 
-        height:55%;
+    .speaker-sprite{
+        right:18%;
+    }
 
-        max-width:70%;
+    .character-sprite.player-center{
+
+        left:50%;
+
+        height:67%;
+
+        max-width:62%;
+
+        transform:translateX(-50%) scale(1.02);
+    }
+
+    .character-sprite.player-center.talking{
+        transform:translateX(-50%) scale(1.05);
     }
 
     .dialogue-area{
@@ -1134,11 +1219,19 @@ button{
         </div>
 
 
+        <!-- Sprite do jogador/protagonista -->
         <img
             id="characterSprite"
-            class="character-sprite"
+            class="character-sprite hidden-sprite"
             src=""
-            alt="Personagem">
+            alt="Personagem do jogador">
+
+        <!-- Sprite de quem está falando -->
+        <img
+            id="speakerSprite"
+            class="speaker-sprite hidden-sprite"
+            src=""
+            alt="Personagem falando">
 
     </div>
 
@@ -1350,7 +1443,7 @@ let selectedCharacter = null;
    na lista jogável principal. */
 const speakerAssets = {
     "Beto":"beto.png",
-    "Douglas":"douglas.png",
+    "Derson":"douglas.png",
     "Mara":"mara.png",
     "Anny":"anny.png"
 };
@@ -1686,6 +1779,16 @@ function startGame(){
         .src =
         selectedCharacter.image;
 
+    document
+        .getElementById("characterSprite")
+        .classList
+        .add("hidden-sprite");
+
+    document
+        .getElementById("speakerSprite")
+        .classList
+        .add("hidden-sprite");
+
     clues = [];
 
     investigationPoints = 0;
@@ -1919,7 +2022,7 @@ const story = [
     },
 
     {
-        speaker:"Douglas",
+        speaker:"Derson",
 
         text:() =>
             "Todo mundo fica junto. Ninguém vai sair andando sozinho por aí."
@@ -3179,7 +3282,11 @@ function setScene(scene){
 
 function getSpeakerImage(name){
 
-    if(!name || name === "Narrador" || name === "Desconhecido")
+    if(
+        !name ||
+        name === "Narrador" ||
+        name === "Desconhecido"
+    )
         return "";
 
     const character =
@@ -3195,67 +3302,153 @@ function getSpeakerImage(name){
 }
 
 
+/* =====================================================
+   SISTEMA DINÂMICO DE POSIÇÃO DOS PERSONAGENS
+===================================================== */
+
 function setSpeaker(name){
 
     const speaker =
-        document.getElementById(
-            "speaker"
+        document.getElementById("speaker");
+
+    const playerSprite =
+        document.getElementById("characterSprite");
+
+    const speakingSprite =
+        document.getElementById("speakerSprite");
+
+    const isPlayer =
+        !!(
+            selectedCharacter &&
+            name === selectedCharacter.name
         );
 
-    const sprite =
-        document.getElementById(
-            "characterSprite"
-        );
+    speaker.textContent = name;
 
-    speaker.textContent =
-        name;
+    if(isPlayer){
 
-    if(
-        selectedCharacter &&
-        name ===
-        selectedCharacter.name
-    ){
-
-        speaker.classList.add(
-            "protagonist"
-        );
+        speaker.classList.add("protagonist");
 
     }else{
 
-        speaker.classList.remove(
-            "protagonist"
-        );
+        speaker.classList.remove("protagonist");
+    }
 
+    /* Narrador / desconhecido:
+       não colocamos sprites genéricos. */
+    if(
+        !name ||
+        name === "Narrador" ||
+        name === "Desconhecido"
+    ){
+
+        playerSprite.classList.add("hidden-sprite");
+        playerSprite.classList.remove("player-center","talking");
+
+        speakingSprite.classList.add("hidden-sprite");
+        speakingSprite.classList.remove("talking");
+
+        playerSprite.removeAttribute("src");
+        speakingSprite.removeAttribute("src");
+
+        return;
+    }
+
+    /* =================================================
+       O JOGADOR ESTÁ FALANDO
+       -> somente ele no centro
+    ================================================== */
+
+    if(isPlayer){
+
+        playerSprite.src =
+            selectedCharacter.image;
+
+        playerSprite.alt =
+            selectedCharacter.name;
+
+        playerSprite.classList.remove("hidden-sprite");
+        playerSprite.classList.add("player-center");
+
+        speakingSprite.classList.add("hidden-sprite");
+        speakingSprite.classList.remove("talking");
+        speakingSprite.removeAttribute("src");
+
+        requestAnimationFrame(() => {
+
+            playerSprite.classList.add("talking");
+
+            setTimeout(() => {
+
+                playerSprite.classList.remove("talking");
+
+            },300);
+
+        });
+
+        return;
+    }
+
+    /* =================================================
+       OUTRA PESSOA ESTÁ FALANDO
+       -> jogador à esquerda
+       -> pessoa falando à direita
+    ================================================== */
+
+    if(selectedCharacter){
+
+        playerSprite.src =
+            selectedCharacter.image;
+
+        playerSprite.alt =
+            selectedCharacter.name;
+
+        playerSprite.classList.remove(
+            "hidden-sprite",
+            "player-center"
+        );
+    }else{
+
+        playerSprite.classList.add(
+            "hidden-sprite"
+        );
     }
 
     const image =
         getSpeakerImage(name);
 
-    sprite.classList.remove("talking");
-
     if(image){
 
-        sprite.src = image;
-        sprite.alt = name;
-        sprite.style.visibility = "visible";
+        speakingSprite.src = image;
+        speakingSprite.alt = name;
+        speakingSprite.classList.remove(
+            "hidden-sprite"
+        );
 
         requestAnimationFrame(() => {
 
-            sprite.classList.add("talking");
+            speakingSprite.classList.add(
+                "talking"
+            );
 
             setTimeout(() => {
-                sprite.classList.remove("talking");
+
+                speakingSprite.classList.remove(
+                    "talking"
+                );
+
             },300);
 
         });
 
     }else{
 
-        sprite.removeAttribute("src");
-        sprite.alt = "";
-        sprite.style.visibility = "hidden";
+        speakingSprite.removeAttribute("src");
+        speakingSprite.alt = "";
+        speakingSprite.classList.add(
+            "hidden-sprite"
+        );
     }
-
 }
 
 
@@ -3341,29 +3534,39 @@ function updateClueCount(){
 
 function animateCharacter(){
 
-    const sprite =
+    const playerSprite =
         document.getElementById(
             "characterSprite"
         );
 
-    if(
-        !sprite ||
-        sprite.style.visibility === "hidden" ||
-        !sprite.getAttribute("src")
-    )
-        return;
+    const speakingSprite =
+        document.getElementById(
+            "speakerSprite"
+        );
 
-    sprite.classList.add(
-        "talking"
-    );
+    if(playerSprite &&
+       !playerSprite.classList.contains("hidden-sprite") &&
+       playerSprite.getAttribute("src")){
 
-    setTimeout(
-        () =>
-            sprite.classList.remove(
-                "talking"
-            ),
-        300
-    );
+        playerSprite.classList.add("talking");
+
+        setTimeout(() =>
+            playerSprite.classList.remove("talking"),
+            300
+        );
+    }
+
+    if(speakingSprite &&
+       !speakingSprite.classList.contains("hidden-sprite") &&
+       speakingSprite.getAttribute("src")){
+
+        speakingSprite.classList.add("talking");
+
+        setTimeout(() =>
+            speakingSprite.classList.remove("talking"),
+            300
+        );
+    }
 }
 
 
